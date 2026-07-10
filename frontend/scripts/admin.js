@@ -1,3 +1,7 @@
+if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+}
+
 document.getElementById('add-video-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
