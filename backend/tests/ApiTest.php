@@ -157,4 +157,88 @@ class ApiTest extends TestCase
         $data = json_decode($response->getBody(), true);
         $this->assertEquals('Video added successfully!', $data['message']);
     }
+
+    public function testVerifyTokenMissingToken()
+    {
+        $response = $this->client->get('verify-token.php');
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    public function testVerifyTokenInvalidToken()
+    {
+        $response = $this->client->get('verify-token.php', [
+            'headers' => [
+                'Authorization' => 'Bearer invalidtoken'
+            ]
+        ]);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testLoginSuccessAndReturnsToken
+     */
+    public function testVerifyTokenSuccess($token)
+    {
+        $response = $this->client->get('verify-token.php', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertTrue($data['valid']);
+    }
+
+    public function testAddArticleMethodNotAllowed()
+    {
+        $response = $this->client->get('add-article.php');
+        $this->assertEquals(405, $response->getStatusCode());
+    }
+
+    public function testAddArticleMissingToken()
+    {
+        $response = $this->client->post('add-article.php', [
+            'json' => [
+                'title' => 'Test Article',
+                'content' => 'Test Content'
+            ]
+        ]);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testLoginSuccessAndReturnsToken
+     */
+    public function testAddArticleMissingFields($token)
+    {
+        $response = $this->client->post('add-article.php', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token
+            ],
+            'json' => [
+                'title' => 'Test Article'
+            ]
+        ]);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testLoginSuccessAndReturnsToken
+     */
+    public function testAddArticleSuccess($token)
+    {
+        $response = $this->client->post('add-article.php', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token
+            ],
+            'json' => [
+                'title' => 'PHPUnit Test Article',
+                'content' => '<strong>Test</strong> content'
+            ]
+        ]);
+        $this->assertEquals(201, $response->getStatusCode());
+        
+        $data = json_decode($response->getBody(), true);
+        $this->assertEquals('Article added successfully!', $data['message']);
+    }
 }

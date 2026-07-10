@@ -36,10 +36,9 @@ if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
 $token = $matches[1];
 
 $title = isset($input['title']) ? trim(htmlspecialchars($input['title'], ENT_QUOTES, 'UTF-8')) : '';
-$youtube_id = isset($input['youtube_id']) ? trim(htmlspecialchars($input['youtube_id'], ENT_QUOTES, 'UTF-8')) : '';
-$category = isset($input['category']) ? trim(htmlspecialchars($input['category'], ENT_QUOTES, 'UTF-8')) : '';
+$content = isset($input['content']) ? trim(htmlspecialchars($input['content'], ENT_QUOTES, 'UTF-8')) : '';
 
-if (empty($title) || empty($youtube_id) || empty($category)) {
+if (empty($title) || empty($content)) {
     http_response_code(400);
     echo json_encode(["error" => "All fields are required"]);
     exit();
@@ -59,16 +58,15 @@ try {
         exit();
     }
 
-    $stmt = $db->prepare("INSERT INTO videos (title, youtube_id, category) VALUES (:title, :youtube_id, :category)");
+    $stmt = $db->prepare("INSERT INTO articles (title, content) VALUES (:title, :content)");
     
     $stmt->execute([
         ':title' => $title,
-        ':youtube_id' => $youtube_id,
-        ':category' => $category
+        ':content' => $content
     ]);
 
     http_response_code(201);
-    echo json_encode(["message" => "Video added successfully!"]);
+    echo json_encode(["message" => "Article added successfully!"]);
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(["error" => "Database error: " . $e->getMessage()]);

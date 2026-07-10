@@ -30,7 +30,25 @@
         <button type="submit">Add Video</button>
       </form>
 
-      <output id="message"></output>
+      <output id="message-video"></output>
+
+      <br><br>
+      <h1>add-article</h1>
+      <form id="add-article-form">
+        <p class="form-group">
+          <label for="article_title">Article Title</label>
+          <input type="text" id="article_title" name="title" placeholder="Introduction to React" required />
+        </p>
+
+        <p class="form-group">
+          <label for="content">Content</label>
+          <textarea id="content" name="content" rows="6" style="width: 100%; padding: 10px; font-family: var(--font-mono); font-size: 0.9rem; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);" placeholder="Write your article content here..." required></textarea>
+        </p>
+
+        <button type="submit">Add Article</button>
+      </form>
+
+      <output id="message-article"></output>
     </main>
 
     <script src="scripts/admin.js"></script>
