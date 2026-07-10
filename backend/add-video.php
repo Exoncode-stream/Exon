@@ -19,7 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true);
 
-$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+$authHeader = '';
+if (function_exists('apache_request_headers')) {
+    $apacheHeaders = apache_request_headers();
+    $authHeader = $apacheHeaders['Authorization'] ?? '';
+}
+if (empty($authHeader) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+}
+
 if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
     http_response_code(401);
     echo json_encode(["error" => "Unauthorized - Token missing"]);

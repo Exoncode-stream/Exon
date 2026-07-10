@@ -24,6 +24,12 @@ try {
         token TEXT
     )");
 
+    $db->exec("CREATE TABLE IF NOT EXISTS articles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL
+    )");
+
     echo "Database and tables created successfully!\n";
 
     $countLinks = $db->query("SELECT COUNT(*) FROM links")->fetchColumn();
@@ -66,6 +72,27 @@ try {
         $hash = password_hash("admin", PASSWORD_DEFAULT);
         $stmt->execute(['username' => 'admin', 'password' => $hash]);
         echo "Initial admin user inserted successfully!\n";
+    }
+
+    $countArticles = $db->query("SELECT COUNT(*) FROM articles")->fetchColumn();
+    if ($countArticles == 0) {
+        $stmt = $db->prepare("INSERT INTO articles (title, content) VALUES (:title, :content)");
+
+        $articles = [
+            [
+                "title" => "Introduction to Next.js",
+                "content" => "Next.js is a React framework that gives you building blocks to create web applications..."
+            ],
+            [
+                "title" => "Understanding Docker",
+                "content" => "Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers..."
+            ]
+        ];
+
+        foreach ($articles as $article) {
+            $stmt->execute($article);
+        }
+        echo "Initial articles inserted successfully!\n";
     }
 
 } catch (PDOException $e) {
