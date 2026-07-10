@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Admin panel — Add a new video to the Exon hub." />
+    <meta name="description" content="Admin panel — Manage videos, articles and users on the Exon hub." />
     <title>Admin — Exon</title>
     <link rel="stylesheet" href="styles/main.css" />
   </head>
@@ -32,23 +32,40 @@
 
       <output id="message-video"></output>
 
-      <br><br>
-      <h1>add-article</h1>
-      <form id="add-article-form">
-        <p class="form-group">
-          <label for="article_title">Article Title</label>
-          <input type="text" id="article_title" name="title" placeholder="Introduction to React" required />
-        </p>
+      <section class="admin-section">
+        <h2>add-article</h2>
 
-        <p class="form-group">
-          <label for="content">Content</label>
-          <textarea id="content" name="content" rows="6" style="width: 100%; padding: 10px; font-family: var(--font-mono); font-size: 0.9rem; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);" placeholder="Write your article content here..." required></textarea>
-        </p>
+        <form id="add-article-form">
+          <p class="form-group">
+            <label for="article_title">Article Title</label>
+            <input type="text" id="article_title" name="title" placeholder="Introduction to React" required />
+          </p>
 
-        <button type="submit">Add Article</button>
-      </form>
+          <p class="form-group">
+            <label for="content">Content</label>
+            <textarea id="content" name="content" rows="6" placeholder="Write your article content here..." required></textarea>
+          </p>
 
-      <output id="message-article"></output>
+          <button type="submit">Add Article</button>
+        </form>
+
+        <output id="message-article"></output>
+      </section>
+
+      <section class="admin-section" id="users-section">
+        <h2>users</h2>
+        <table class="users-table" id="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </section>
     </main>
 
     <script src="scripts/admin.js"></script>

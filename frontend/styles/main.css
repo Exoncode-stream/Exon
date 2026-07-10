@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
 
-/* --- Design Tokens --- */
 :root {
   --bg-deep: #0d1117;
   --bg-surface: #161b22;
@@ -17,6 +16,8 @@
   --accent-glow: rgba(57, 255, 136, 0.4);
 
   --danger: #f85149;
+  --danger-dim: rgba(248, 81, 73, 0.15);
+  --danger-glow: rgba(248, 81, 73, 0.4);
   --success: #39ff88;
 
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
@@ -29,7 +30,6 @@
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- Reset & Base --- */
 *,
 *::before,
 *::after {
@@ -53,7 +53,6 @@ body {
   min-height: 100vh;
 }
 
-/* Subtle grid pattern overlay */
 body::before {
   content: '';
   position: fixed;
@@ -66,7 +65,6 @@ body::before {
   opacity: 0.4;
 }
 
-/* --- Container --- */
 .container {
   position: relative;
   z-index: 1;
@@ -75,9 +73,6 @@ body::before {
   padding: 3rem 1.5rem 4rem;
 }
 
-/* ===================================================
-   HERO — Terminal Prompt
-   =================================================== */
 .hero {
   margin-bottom: 3rem;
 }
@@ -163,7 +158,6 @@ body::before {
   display: block;
 }
 
-/* Blinking cursor */
 .cursor {
   display: inline-block;
   width: 10px;
@@ -180,9 +174,6 @@ body::before {
   }
 }
 
-/* ===================================================
-   LINKS — Pill Buttons
-   =================================================== */
 .links-grid {
   display: flex;
   flex-wrap: wrap;
@@ -213,9 +204,6 @@ body::before {
   box-shadow: 0 0 15px var(--accent-dim), inset 0 0 15px var(--accent-dim);
 }
 
-/* ===================================================
-   SECTION HEADINGS
-   =================================================== */
 .section-title {
   font-family: var(--font-mono);
   font-size: 1rem;
@@ -240,9 +228,6 @@ body::before {
   background: var(--border-subtle);
 }
 
-/* ===================================================
-   VIDEO CARDS
-   =================================================== */
 .videos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -293,9 +278,6 @@ body::before {
   letter-spacing: 0.03em;
 }
 
-/* ===================================================
-   ARTICLE CARDS
-   =================================================== */
 .articles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -325,9 +307,6 @@ body::before {
   color: var(--text-primary);
 }
 
-/* ===================================================
-   MODAL — Glassmorphism
-   =================================================== */
 dialog {
   border: none;
   padding: 0;
@@ -393,12 +372,10 @@ dialog button:hover {
   box-shadow: 0 0 12px var(--accent-dim);
 }
 
-/* ===================================================
-   FORMS — Login & Admin
-   =================================================== */
 main:has(form#login-form),
-main:has(form#add-video-form) {
-  max-width: 460px;
+main:has(form#add-video-form),
+main:has(form#register-form) {
+  max-width: 520px;
   margin: 0 auto;
   padding: 4rem 1.5rem;
   position: relative;
@@ -454,6 +431,29 @@ h1::before {
   color: var(--text-muted);
 }
 
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: var(--transition);
+  resize: vertical;
+}
+
+.form-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
 form button[type="submit"] {
   display: inline-flex;
   align-items: center;
@@ -477,7 +477,6 @@ form button[type="submit"]:hover {
   transform: translateY(-1px);
 }
 
-/* --- Messages --- */
 output#message,
 #message {
   display: block;
@@ -494,6 +493,20 @@ output#message:empty,
   display: none;
 }
 
+output[id^="message-"] {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin-top: 1.25rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+}
+
+output[id^="message-"]:empty {
+  display: none;
+}
+
 .success {
   color: var(--success);
   background: rgba(57, 255, 136, 0.08);
@@ -506,9 +519,6 @@ output#message:empty,
   border-color: rgba(248, 81, 73, 0.2) !important;
 }
 
-/* ===================================================
-   FOOTER
-   =================================================== */
 .site-footer {
   text-align: center;
   padding: 2rem 1rem;
@@ -520,9 +530,255 @@ output#message:empty,
   z-index: 1;
 }
 
-/* ===================================================
-   RESPONSIVE
-   =================================================== */
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--bg-deep);
+  background: var(--accent);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.btn-secondary:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-dim), inset 0 0 15px var(--accent-dim);
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.btn-danger:hover {
+  color: #fff;
+  background: var(--danger);
+  box-shadow: 0 0 20px var(--danger-glow);
+  transform: translateY(-1px);
+}
+
+.btn-delete-video {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 0 14px 12px;
+  padding: 7px 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--danger);
+  background: var(--danger-dim);
+  border: 1px solid rgba(248, 81, 73, 0.25);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.02em;
+}
+
+.btn-delete-video:hover {
+  color: #fff;
+  background: var(--danger);
+  border-color: var(--danger);
+  box-shadow: 0 0 15px var(--danger-glow);
+  transform: translateY(-1px);
+}
+
+.profile-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.profile-card p {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.profile-card p:last-child {
+  margin-bottom: 0;
+}
+
+.profile-card strong {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.admin-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.admin-section h2 {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-section h2::before {
+  content: '//';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.admin-section h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.users-table thead {
+  background: var(--bg-elevated);
+}
+
+.users-table th {
+  padding: 12px 16px;
+  text-align: left;
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-subtle);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+.users-table td {
+  padding: 12px 16px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.users-table tbody tr {
+  transition: var(--transition);
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+  background: var(--bg-elevated);
+}
+
+.users-table select {
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2339ff88' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+.users-table select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+  outline: none;
+}
+
+.form-alt-link {
+  margin-top: 1.5rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
 @media (max-width: 640px) {
   .container {
     padding: 2rem 1rem 3rem;
@@ -544,11 +800,17 @@ output#message:empty,
   .links-grid {
     justify-content: center;
   }
+
+  .users-table {
+    font-size: 0.7rem;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 8px 10px;
+  }
 }
 
-/* ===================================================
-   ANIMATIONS — Entrance
-   =================================================== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
