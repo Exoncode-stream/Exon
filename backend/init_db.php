@@ -17,12 +17,18 @@ try {
         category TEXT NOT NULL
     )");
 
+    $db->exec("CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL
+    )");
+
     echo "Database and tables created successfully!\n";
 
     $countLinks = $db->query("SELECT COUNT(*) FROM links")->fetchColumn();
     if ($countLinks == 0) {
         $stmt = $db->prepare("INSERT INTO links (name, url) VALUES (:name, :url)");
-        
+
         $links = [
             ["name" => "YouTube", "url" => "https://www.youtube.com/@exon9858"],
             ["name" => "GitHub", "url" => "https://github.com/Exoncode-stream/"],
@@ -51,6 +57,14 @@ try {
             $stmt->execute($video);
         }
         echo "Initial videos inserted successfully!\n";
+    }
+
+    $countUsers = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    if ($countUsers == 0) {
+        $stmt = $db->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+        $hash = password_hash("admin", PASSWORD_DEFAULT);
+        $stmt->execute(['username' => 'admin', 'password' => $hash]);
+        echo "Initial admin user inserted successfully!\n";
     }
 
 } catch (PDOException $e) {

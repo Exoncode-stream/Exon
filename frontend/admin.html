@@ -4,36 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - Add Video</title>
+    <link rel="stylesheet" href="styles/main.css" />
   </head>
   <body>
-    <h1>Add a New Video</h1>
+    <main>
+      <h1>Add a New Video</h1>
 
-    <form id="add-video-form">
-      <div class="form-group">
-        <label for="title">Video Title:</label>
-        <input type="text" id="title" name="title" required />
-      </div>
+      <form id="add-video-form">
+        <p class="form-group">
+          <label for="title">Video Title:</label>
+          <input type="text" id="title" name="title" required />
+        </p>
 
-      <div class="form-group">
-        <label for="youtube_id">YouTube URL or ID:</label>
-        <input type="text" id="youtube_id" name="youtube_id" required />
-      </div>
+        <p class="form-group">
+          <label for="youtube_id">YouTube URL or ID:</label>
+          <input type="text" id="youtube_id" name="youtube_id" required />
+        </p>
 
-      <div class="form-group">
-        <label for="category">Category:</label>
-        <input type="text" id="category" name="category" required />
-      </div>
+        <p class="form-group">
+          <label for="category">Category:</label>
+          <input type="text" id="category" name="category" required />
+        </p>
 
-      <div class="form-group">
-        <label for="password">Admin Password:</label>
-        <input type="password" id="password" name="password" required />
-      </div>
+        <p class="form-group">
+          <label for="password">Admin Password:</label>
+          <input type="password" id="password" name="password" required />
+        </p>
 
-      <button type="submit">Add Video</button>
-    </form>
+        <button type="submit">Add Video</button>
+      </form>
 
-    <div id="message"></div>
+      <output id="message"></output>
+    </main>
 
-    <script src="admin.js"></script>
+    <script src="scripts/admin.js"></script>
   </body>
 </html>
