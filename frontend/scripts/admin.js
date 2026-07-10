@@ -13,10 +13,12 @@ document.getElementById('add-video-form').addEventListener('submit', async funct
     const data = Object.fromEntries(formData.entries());
 
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:8000/add-video.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data)
         });

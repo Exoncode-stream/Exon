@@ -31,6 +31,9 @@ try {
     if ($user && password_verify($password, $user['password'])) {
         $token = bin2hex(random_bytes(32));
         
+        $updateStmt = $db->prepare("UPDATE users SET token = :token WHERE id = :id");
+        $updateStmt->execute(['token' => $token, 'id' => $user['id']]);
+        
         echo json_encode([
             "success" => true,
             "token" => $token,
