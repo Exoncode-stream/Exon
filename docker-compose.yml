@@ -21,6 +21,17 @@ services:
     networks:
       - exon-network
 
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./backend:/var/www/html:z
+    networks:
+      - exon-network
+    depends_on:
+      - backend
+
 networks:
   exon-network:
     driver: bridge
