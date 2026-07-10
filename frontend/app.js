@@ -55,7 +55,7 @@ async function fetchHubData() {
         iframe.width = "100%";
         iframe.height = "315";
         iframe.style.border = "none";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
         iframe.allowFullscreen = true;
 
         videoCard.appendChild(iframe);
