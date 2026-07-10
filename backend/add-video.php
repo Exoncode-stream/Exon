@@ -39,7 +39,7 @@ if ($password !== $ADMIN_PASSWORD) {
 }
 
 try {
-    $db = new PDO('sqlite:database.sqlite');
+    $db = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $db->prepare("INSERT INTO videos (title, youtube_id, category) VALUES (:title, :youtube_id, :category)");

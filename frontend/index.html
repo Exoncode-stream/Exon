@@ -7,14 +7,34 @@
   </head>
   <body>
     <main class="container">
-      <h1 id="pseudo">Loading...</h1>
-      <p id="description"></p>
+      <header>
+        <h1 id="pseudo">Loading...</h1>
+        <p id="description"></p>
+      </header>
 
-      <div id="links-container" class="links-grid"></div>
+      <nav id="links-container" class="links-grid"></nav>
+
+      <section id="articles-section">
+        <h2>My Articles</h2>
+        <section id="articles-container" class="articles-grid"></section>
+      </section>
+
       <section id="videos-section">
         <h2>My last videos</h2>
-        <div id="videos-container" class="videos-grid"></div>
+        <section id="videos-container" class="videos-grid"></section>
       </section>
+
+      <dialog id="article-modal">
+        <article>
+          <header>
+            <h2 id="modal-title"></h2>
+          </header>
+          <p id="modal-content"></p>
+          <footer>
+            <button id="close-modal">Close</button>
+          </footer>
+        </article>
+      </dialog>
     </main>
 
     <script src="app.js"></script>

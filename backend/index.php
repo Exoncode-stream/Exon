@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
 
 try {
-    $db = new PDO('sqlite:database.sqlite');
+    $db = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $linksStmt = $db->query("SELECT name, url FROM links");
@@ -15,6 +15,9 @@ try {
 
     $videosStmt = $db->query("SELECT title, youtube_id, category FROM videos");
     $videos = $videosStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $articlesStmt = $db->query("SELECT id, title, content FROM articles");
+    $articles = $articlesStmt->fetchAll(PDO::FETCH_ASSOC);
 
     $linksHtml = "";
     foreach ($links as $link) {
@@ -31,8 +34,8 @@ try {
             }
         }
 
-        $videosHtml .= '<div class="video-card">';
-        $videosHtml .= '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" title="' . htmlspecialchars($video['title']) . '" width="100%" height="315" style="border:none;" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+        $videosHtml .= '<article class="video-card">';
+        $videosHtml .= '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" title="' . htmlspecialchars($video['title']) . '" width="100%" height="315" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
 
         if (!empty($video['title'])) {
             $videosHtml .= '<h3>' . htmlspecialchars($video['title']) . '</h3>';
@@ -40,7 +43,7 @@ try {
         if (!empty($video['category'])) {
             $videosHtml .= '<span class="video-category">' . htmlspecialchars($video['category']) . '</span>';
         }
-        $videosHtml .= '</div>';
+        $videosHtml .= '</article>';
     }
 
     $data = [
@@ -48,6 +51,7 @@ try {
         "description" => "Full-Stack student developer, learning code and sharing thsee on my socials",
         "linksHtml" => $linksHtml,
         "videosHtml" => $videosHtml,
+        "articles" => $articles,
     ];
 
     echo json_encode($data);
