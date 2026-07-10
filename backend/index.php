@@ -27,6 +27,13 @@ $data = [
             "url" => "guiireg",
         ],
     ],
+    "videos" => [
+        [
+            "title" => "Creating Learn Code website with Next.js",
+            "youtube_id" => "https://www.youtube.com/watch?v=ILW91gXl30Y",
+            "category" => "Web development",
+        ],
+    ],
 ];
 
 // 4. The answer

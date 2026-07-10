@@ -30,6 +30,54 @@ async function fetchHubData() {
 
       linksContainer.appendChild(anchor);
     });
+
+    // Create video elements
+    const videosContainer = document.getElementById("videos-container");
+    if (data.videos && Array.isArray(data.videos)) {
+      data.videos.forEach((video) => {
+        const videoCard = document.createElement("div");
+        videoCard.className = "video-card";
+
+        // Extract YouTube ID from URL or use as is
+        let videoId = video.youtube_id;
+        if (videoId.includes("youtube.com") || videoId.includes("youtu.be")) {
+          const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+          const match = videoId.match(regExp);
+          if (match && match[2].length === 11) {
+            videoId = match[2];
+          }
+        }
+
+        // Create iframe element
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        iframe.title = video.title;
+        iframe.width = "100%";
+        iframe.height = "315";
+        iframe.style.border = "none";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+
+        videoCard.appendChild(iframe);
+
+        // Add video title
+        if (video.title) {
+          const titleEl = document.createElement("h3");
+          titleEl.textContent = video.title;
+          videoCard.appendChild(titleEl);
+        }
+
+        // Add video category
+        if (video.category) {
+          const categoryEl = document.createElement("span");
+          categoryEl.textContent = video.category;
+          categoryEl.className = "video-category";
+          videoCard.appendChild(categoryEl);
+        }
+
+        videosContainer.appendChild(videoCard);
+      });
+    }
   } catch (error) {
     console.error("Impossible de récupérer les données :", error);
     document.getElementById("pseudo").textContent = "Erreur de chargement";
