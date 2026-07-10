@@ -37,7 +37,9 @@ try {
         echo json_encode([
             "success" => true,
             "token" => $token,
-            "message" => "Login successful"
+            "message" => "Login successful",
+            "username" => $user['username'],
+            "role" => $user['role']
         ]);
     } else {
         http_response_code(401);

@@ -13,7 +13,7 @@ try {
     $linksStmt = $db->query("SELECT name, url FROM links");
     $links = $linksStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $videosStmt = $db->query("SELECT title, youtube_id, category FROM videos");
+    $videosStmt = $db->query("SELECT id, title, youtube_id, category FROM videos");
     $videos = $videosStmt->fetchAll(PDO::FETCH_ASSOC);
 
     $articlesStmt = $db->query("SELECT id, title, content FROM articles");
@@ -34,7 +34,7 @@ try {
             }
         }
 
-        $videosHtml .= '<article class="video-card">';
+        $videosHtml .= '<article class="video-card" data-id="' . $video['id'] . '">';
         $videosHtml .= '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" title="' . htmlspecialchars($video['title']) . '" width="100%" height="315" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
 
         if (!empty($video['title'])) {

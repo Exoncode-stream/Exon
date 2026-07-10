@@ -21,8 +21,18 @@ try {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
-        token TEXT
+        token TEXT,
+        role TEXT DEFAULT 'viewer',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
+
+    try {
+        $db->exec("ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'viewer'");
+    } catch (PDOException $e) {}
+
+    try {
+        $db->exec("ALTER TABLE users ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
+    } catch (PDOException $e) {}
 
     $db->exec("CREATE TABLE IF NOT EXISTS articles (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,10 +78,12 @@ try {
 
     $countUsers = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
     if ($countUsers == 0) {
-        $stmt = $db->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+        $stmt = $db->prepare("INSERT INTO users (username, password, role) VALUES (:username, :password, :role)");
         $hash = password_hash("admin", PASSWORD_DEFAULT);
-        $stmt->execute(['username' => 'admin', 'password' => $hash]);
+        $stmt->execute(['username' => 'admin', 'password' => $hash, 'role' => 'admin']);
         echo "Initial admin user inserted successfully!\n";
+    } else {
+        $db->exec("UPDATE users SET role = 'admin' WHERE username = 'admin'");
     }
 
     $countArticles = $db->query("SELECT COUNT(*) FROM articles")->fetchColumn();
