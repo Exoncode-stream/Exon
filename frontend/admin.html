@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Video</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #message { margin-top: 20px; font-weight: bold; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Add a New Video</h1>
+    
+    <form id="add-video-form">
+        <div class="form-group">
+            <label for="title">Video Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="youtube_id">YouTube URL or ID:</label>
+            <input type="text" id="youtube_id" name="youtube_id" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Admin Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <button type="submit">Add Video</button>
+    </form>
+    
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('add-video-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = 'Sending...';
+            messageDiv.className = '';
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('http://localhost:8000/add-video.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = 'Success: Video added!';
+                    messageDiv.className = 'success';
+                    this.reset();
+                } else {
+                    messageDiv.textContent = 'Error: ' + (result.error || 'Failed to add video');
+                    messageDiv.className = 'error';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.textContent = 'Network Error: ' + error.message;
+                messageDiv.className = 'error';
+            }
+        });
+    </script>
+</body>
+</html>

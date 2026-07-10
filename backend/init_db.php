@@ -1,18 +1,15 @@
 <?php
 
 try {
-    // Connect to SQLite database (it will be created if it doesn't exist)
     $db = new PDO('sqlite:database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Create table links
     $db->exec("CREATE TABLE IF NOT EXISTS links (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         url TEXT NOT NULL
     )");
 
-    // Create table videos
     $db->exec("CREATE TABLE IF NOT EXISTS videos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
@@ -22,7 +19,6 @@ try {
 
     echo "Database and tables created successfully!\n";
 
-    // Insert initial data if the tables are empty
     $countLinks = $db->query("SELECT COUNT(*) FROM links")->fetchColumn();
     if ($countLinks == 0) {
         $stmt = $db->prepare("INSERT INTO links (name, url) VALUES (:name, :url)");
