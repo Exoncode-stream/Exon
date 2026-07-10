@@ -38,7 +38,7 @@ if (empty($title) || empty($youtube_id) || empty($category)) {
 }
 
 try {
-    $db = new PDO('sqlite:database.sqlite');
+    $db = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $db->prepare("SELECT * FROM users WHERE token = :token");

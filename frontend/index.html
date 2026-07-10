@@ -8,14 +8,28 @@
   </head>
   <body>
     <main class="container">
-      <h1 id="pseudo">Loading...</h1>
-      <p id="description"></p>
+      <header>
+        <h1 id="pseudo">Loading...</h1>
+        <p id="description"></p>
+      </header>
 
       <section id="links-container" class="links-grid"></section>
       <section id="videos-section">
         <h2>My last videos</h2>
         <article id="videos-container" class="videos-grid"></article>
       </section>
+
+      <dialog id="article-modal">
+        <article>
+          <header>
+            <h2 id="modal-title"></h2>
+          </header>
+          <p id="modal-content"></p>
+          <footer>
+            <button id="close-modal">Close</button>
+          </footer>
+        </article>
+      </dialog>
     </main>
 
     <script src="scripts/app.js"></script>

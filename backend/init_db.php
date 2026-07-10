@@ -1,7 +1,7 @@
 <?php
 
 try {
-    $db = new PDO('sqlite:database.sqlite');
+    $db = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $db->exec("CREATE TABLE IF NOT EXISTS links (
