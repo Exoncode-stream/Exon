@@ -3,20 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Exon | Portfolio</title>
+    <meta name="description" content="Exon — Full-Stack developer hub. Videos, articles, and links." />
+    <title>Exon | Dev Hub</title>
     <link rel="stylesheet" href="styles/main.css" />
   </head>
   <body>
     <main class="container">
-      <header>
-        <h1 id="pseudo">Loading...</h1>
-        <p id="description"></p>
+
+      <header class="hero fade-in">
+        <section class="terminal-block">
+          <header class="terminal-header">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-title">exon@hub:~</span>
+          </header>
+          <section class="terminal-body">
+            <p class="terminal-line">
+              <span class="terminal-prompt">$ </span>
+              <span id="typewriter-target"></span>
+              <span class="cursor" id="cursor"></span>
+            </p>
+            <p class="terminal-line terminal-output">
+              <h1 id="pseudo"></h1>
+            </p>
+            <p id="description"></p>
+          </section>
+        </section>
       </header>
 
-      <section id="links-container" class="links-grid"></section>
-      <section id="videos-section">
-        <h2>My last videos</h2>
-        <article id="videos-container" class="videos-grid"></article>
+      <nav id="links-container" class="links-grid fade-in fade-in-delay-1"></nav>
+
+      <section id="videos-section" class="fade-in fade-in-delay-2">
+        <h2 class="section-title">Latest Videos</h2>
+        <section id="videos-container" class="videos-grid"></section>
+      </section>
+
+      <section id="articles-section" class="fade-in fade-in-delay-3">
+        <h2 class="section-title">Articles</h2>
+        <section id="articles-container" class="articles-grid"></section>
       </section>
 
       <dialog id="article-modal">
@@ -30,7 +55,12 @@
           </footer>
         </article>
       </dialog>
+
     </main>
+
+    <footer class="site-footer">
+      <p>Built with vanilla JS, PHP &amp; SQLite — no frameworks needed.</p>
+    </footer>
 
     <script src="scripts/app.js"></script>
   </body>
