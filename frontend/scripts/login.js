@@ -1,15 +1,15 @@
-document.getElementById('add-video-form').addEventListener('submit', async function (e) {
+document.getElementById('login-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const messageDiv = document.getElementById('message');
-    messageDiv.textContent = 'Sending...';
+    messageDiv.textContent = 'Connexion en cours...';
     messageDiv.className = '';
 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch('http://localhost:8000/add-video.php', {
+        const response = await fetch('http://localhost:8000/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -20,16 +20,21 @@ document.getElementById('add-video-form').addEventListener('submit', async funct
         const result = await response.json();
 
         if (response.ok) {
-            messageDiv.textContent = 'Success: Video added!';
+            messageDiv.textContent = 'Succès : Connecté !';
             messageDiv.className = 'success';
-            this.reset();
+
+            localStorage.setItem('token', result.token);
+
+            setTimeout(() => {
+                window.location.href = 'admin.html';
+            }, 1000);
         } else {
-            messageDiv.textContent = 'Error: ' + (result.error || 'Failed to add video');
+            messageDiv.textContent = 'Erreur : ' + (result.error || 'Échec de la connexion');
             messageDiv.className = 'error';
         }
     } catch (error) {
         console.error('Error:', error);
-        messageDiv.textContent = 'Network Error: ' + error.message;
+        messageDiv.textContent = 'Erreur réseau : ' + error.message;
         messageDiv.className = 'error';
     }
 });

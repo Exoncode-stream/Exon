@@ -17,10 +17,11 @@ try {
         category TEXT NOT NULL
     )");
 
-    $db->exec("CREATE TABLE IF NOT EXISTS articles (
+    $db->exec("CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        token TEXT
     )");
 
     echo "Database and tables created successfully!\n";
@@ -28,7 +29,7 @@ try {
     $countLinks = $db->query("SELECT COUNT(*) FROM links")->fetchColumn();
     if ($countLinks == 0) {
         $stmt = $db->prepare("INSERT INTO links (name, url) VALUES (:name, :url)");
-        
+
         $links = [
             ["name" => "YouTube", "url" => "https://www.youtube.com/@exon9858"],
             ["name" => "GitHub", "url" => "https://github.com/Exoncode-stream/"],
@@ -59,25 +60,12 @@ try {
         echo "Initial videos inserted successfully!\n";
     }
 
-    $countArticles = $db->query("SELECT COUNT(*) FROM articles")->fetchColumn();
-    if ($countArticles == 0) {
-        $stmt = $db->prepare("INSERT INTO articles (title, content) VALUES (:title, :content)");
-
-        $articles = [
-            [
-                "title" => "Introduction to Next.js",
-                "content" => "Next.js is a React framework that gives you building blocks to create web applications..."
-            ],
-            [
-                "title" => "Understanding Docker",
-                "content" => "Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers..."
-            ]
-        ];
-
-        foreach ($articles as $article) {
-            $stmt->execute($article);
-        }
-        echo "Initial articles inserted successfully!\n";
+    $countUsers = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    if ($countUsers == 0) {
+        $stmt = $db->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+        $hash = password_hash("admin", PASSWORD_DEFAULT);
+        $stmt->execute(['username' => 'admin', 'password' => $hash]);
+        echo "Initial admin user inserted successfully!\n";
     }
 
 } catch (PDOException $e) {

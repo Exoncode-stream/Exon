@@ -19,28 +19,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true);
 
+$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+    http_response_code(401);
+    echo json_encode(["error" => "Unauthorized - Token missing"]);
+    exit();
+}
+$token = $matches[1];
+
 $title = $input['title'] ?? '';
 $youtube_id = $input['youtube_id'] ?? '';
 $category = $input['category'] ?? '';
-$password = $input['password'] ?? '';
 
-if (empty($title) || empty($youtube_id) || empty($category) || empty($password)) {
+if (empty($title) || empty($youtube_id) || empty($category)) {
     http_response_code(400);
     echo json_encode(["error" => "All fields are required"]);
-    exit();
-}
-
-$ADMIN_PASSWORD = "supersecret";
-
-if ($password !== $ADMIN_PASSWORD) {
-    http_response_code(401);
-    echo json_encode(["error" => "Invalid admin password"]);
     exit();
 }
 
 try {
     $db = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $db->prepare("SELECT * FROM users WHERE token = :token");
+    $stmt->execute(['token' => $token]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        http_response_code(401);
+        echo json_encode(["error" => "Unauthorized - Invalid token"]);
+        exit();
+    }
 
     $stmt = $db->prepare("INSERT INTO videos (title, youtube_id, category) VALUES (:title, :youtube_id, :category)");
     
