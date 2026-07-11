@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/verify-token.php", {
+    const response = await fetch("http://localhost:8000/api/verify-token", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ function handleFormSubmit(formId, endpoint, messageDivId) {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `http://localhost:8000/${endpoint}`,
+          `http://localhost:8000/api/${endpoint}`,
           {
             method: "POST",
             headers: {
@@ -77,12 +77,12 @@ function handleFormSubmit(formId, endpoint, messageDivId) {
     });
 }
 
-handleFormSubmit("add-video-form", "add-video.php", "message-video");
-handleFormSubmit("add-article-form", "add-article.php", "message-article");
+handleFormSubmit("add-video-form", "videos", "message-video");
+handleFormSubmit("add-article-form", "articles", "message-article");
 
 async function loadUsers(token) {
   try {
-    const response = await fetch("http://localhost:8000/list-users.php", {
+    const response = await fetch("http://localhost:8000/api/users", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -131,14 +131,17 @@ async function loadUsers(token) {
 
 async function updateUserRole(token, userId, newRole) {
   try {
-    const response = await fetch("http://localhost:8000/update-role.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ user_id: userId, role: newRole }),
-    });
+    const response = await fetch(
+      `http://localhost:8000/api/users/${userId}/role`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      }
+    );
 
     const result = await response.json();
 

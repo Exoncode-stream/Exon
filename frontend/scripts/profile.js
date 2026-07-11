@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/verify-token.php", {
+    const response = await fetch("http://localhost:8000/api/verify-token", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

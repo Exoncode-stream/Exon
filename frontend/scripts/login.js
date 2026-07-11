@@ -11,7 +11,7 @@ document
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch("http://localhost:8000/login.php", {
+      const response = await fetch("http://localhost:8000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
