@@ -142,8 +142,13 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
-# Exon
-backend/database.sqlite
+# Exon — Laravel Backend
 backend/vendor/
 backend/.phpunit.result.cache
+backend/database/database.sqlite
+backend/storage/
+backend/bootstrap/cache/
+backend/.env
+backend/composer.lock
 .vscode/
+backend_legacy/
