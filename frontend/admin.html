@@ -3,28 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Admin panel — Manage videos, articles and users on the Exon hub." />
+    <meta
+      name="description"
+      content="Admin panel — Manage videos, articles and users on the Exon hub."
+    />
     <title>Admin — Exon</title>
     <link rel="stylesheet" href="styles/main.css" />
   </head>
   <body>
+    <nav class="admin-top-bar">
+      <a href="index.html" id="btn-home" class="btn-secondary">← Accueil</a>
+      <a href="profile.html" id="btn-profile" class="btn-secondary">Profil →</a>
+    </nav>
     <main>
       <h1>add-video</h1>
 
       <form id="add-video-form">
         <p class="form-group">
           <label for="title">Video Title</label>
-          <input type="text" id="title" name="title" placeholder="My awesome tutorial" required />
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="My awesome tutorial"
+            required
+          />
         </p>
 
         <p class="form-group">
           <label for="youtube_id">YouTube URL or ID</label>
-          <input type="text" id="youtube_id" name="youtube_id" placeholder="https://youtube.com/watch?v=..." required />
+          <input
+            type="text"
+            id="youtube_id"
+            name="youtube_id"
+            placeholder="https://youtube.com/watch?v=..."
+            required
+          />
         </p>
 
         <p class="form-group">
           <label for="category">Category</label>
-          <input type="text" id="category" name="category" placeholder="Web development" required />
+          <input
+            type="text"
+            id="category"
+            name="category"
+            placeholder="Web development"
+            required
+          />
         </p>
 
         <button type="submit">Add Video</button>
@@ -38,12 +63,24 @@
         <form id="add-article-form">
           <p class="form-group">
             <label for="article_title">Article Title</label>
-            <input type="text" id="article_title" name="title" placeholder="Introduction to React" required />
+            <input
+              type="text"
+              id="article_title"
+              name="title"
+              placeholder="Introduction to React"
+              required
+            />
           </p>
 
           <p class="form-group">
             <label for="content">Content</label>
-            <textarea id="content" name="content" rows="6" placeholder="Write your article content here..." required></textarea>
+            <textarea
+              id="content"
+              name="content"
+              rows="6"
+              placeholder="Write your article content here..."
+              required
+            ></textarea>
           </p>
 
           <button type="submit">Add Article</button>
