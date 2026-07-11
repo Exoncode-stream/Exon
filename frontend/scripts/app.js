@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000/index.php";
+const API_URL = "http://localhost:8000/api/hub";
 
 function typewriter(element, text, speed = 60) {
   return new Promise((resolve) => {
@@ -45,7 +45,7 @@ async function fetchHubData() {
 
     if (token) {
       try {
-        const roleResp = await fetch("http://localhost:8000/verify-token.php", {
+        const roleResp = await fetch("http://localhost:8000/api/verify-token", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (roleResp.ok) {
@@ -99,14 +99,13 @@ async function fetchHubData() {
             if (confirm("Are you sure you want to delete this video?")) {
               try {
                 const delResp = await fetch(
-                  "http://localhost:8000/delete-video.php",
+                  `http://localhost:8000/api/videos/${videoId}`,
                   {
-                    method: "POST",
+                    method: "DELETE",
                     headers: {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ id: videoId }),
                   }
                 );
                 if (delResp.ok) {

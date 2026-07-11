@@ -1,8 +1,8 @@
-# Exon — Full-Stack Developer Hub
+# Exon — Full-Stack Community Hub
 
-Exon est une plateforme web conçue pour regrouper des contenus liés au développement (vidéos YouTube, articles, liens utiles) avec une esthétique forte et assumée : le **"Terminal Noir"**.
+Exon est une plateforme web communautaire conçue pour centraliser les actualités d'un créateur de contenu (vidéos YouTube, articles, liens utiles) avec une esthétique forte et assumée : le **"Terminal Noir"**.
 
-Le projet est entièrement codé "from scratch", sans framework frontend ni backend lourd, afin de garantir des performances maximales et une compréhension totale du code.
+Le projet utilise **Laravel 12** pour son backend API et un frontend **Vanilla** (HTML/CSS/JS) pour garantir des performances maximales et une compréhension totale du code.
 
 ## 🛠️ Stack Technique & Versions
 
@@ -12,50 +12,84 @@ Le projet est entièrement codé "from scratch", sans framework frontend ni back
 - **JavaScript (Vanilla - ES6+)** : Manipulation du DOM, requêtes `fetch`, gestion du `localStorage` (modules séparés par page).
 
 ### Backend
-- **PHP (8.3)** : API RESTful (JSON).
-- **SQLite (3)** : Base de données légère, stockée dans un seul fichier local (`backend/database.sqlite`).
+- **Laravel 12** (PHP 8.3) : API RESTful structurée avec Controllers, Middleware, Eloquent ORM et Form Validation.
+- **SQLite 3** : Base de données légère, gérée via les Migrations Laravel (`database/database.sqlite`).
 
 ### Infrastructure & Qualité
 - **Docker & Docker Compose** : Environnements de production (Nginx/PHP-Apache) et de tests.
-- **PHPUnit (11.0+)** : Tests unitaires automatisés pour valider chaque endpoint de l'API.
-- **Guzzle (7.8+)** : Client HTTP utilisé pour exécuter les tests PHPUnit.
+- **PHPUnit 11+** : Tests unitaires (Feature Tests) utilisant `RefreshDatabase` pour des tests isolés en mémoire.
+- **Laravel Artisan** : CLI pour les migrations, seeders, et la gestion de l'application.
 
 ---
 
 ## 📂 Organisation du Projet
 
-Le projet est structuré en deux parties distinctes :
-
 ```text
 .
-├── backend/                  # API REST & Logique Serveur
-│   ├── tests/                # Tests unitaires PHPUnit (ApiTest.php)
-│   ├── database.sqlite       # Base de données SQLite (Générée)
-│   ├── index.php             # Endpoint public principal (Hub Data)
-│   ├── init_db.php           # Script d'initialisation (Tables & Seed)
-│   ├── login.php             # Authentification
-│   ├── register.php          # Inscription
-│   ├── verify-token.php      # Validation de session & Récupération du rôle
-│   ├── list-users.php        # (Admin) Liste des utilisateurs
-│   ├── update-role.php       # (Admin) Changement de rôle
-│   ├── add-video.php         # (Admin) Ajout de contenu
-│   ├── add-article.php       # (Admin) Ajout d'article
-│   ├── delete-video.php      # (Admin/Mod) Suppression de contenu
-│   ├── composer.json         # Dépendances (PHPUnit, Guzzle)
-│   └── Dockerfile            # Image PHP 8.3 Apache avec SQLite
+├── backend/                          # API REST Laravel
+│   ├── app/
+│   │   ├── Http/
+│   │   │   ├── Controllers/
+│   │   │   │   ├── AuthController.php      # Login, Register, Verify Token
+│   │   │   │   ├── HubController.php       # Données publiques du hub
+│   │   │   │   ├── VideoController.php     # CRUD Vidéos
+│   │   │   │   ├── ArticleController.php   # Création d'articles
+│   │   │   │   └── UserController.php      # Gestion des utilisateurs
+│   │   │   └── Middleware/
+│   │   │       ├── TokenAuth.php           # Authentification par Bearer Token
+│   │   │       └── CheckRole.php           # Vérification des rôles (RBAC)
+│   │   ├── Models/                         # User, Video, Article, Link
+│   │   └── Providers/
+│   ├── config/                             # Configuration Laravel
+│   ├── database/
+│   │   ├── migrations/                     # Schéma de la BDD (4 tables)
+│   │   └── seeders/                        # Données initiales
+│   ├── routes/
+│   │   └── api.php                         # Définition de toutes les routes API
+│   ├── tests/
+│   │   └── Feature/                        # Tests fonctionnels par domaine
+│   │       ├── AuthTest.php
+│   │       ├── HubTest.php
+│   │       ├── VideoTest.php
+│   │       ├── ArticleTest.php
+│   │       └── UserManagementTest.php
+│   ├── composer.json
+│   ├── Dockerfile                          # Image PHP 8.3 Apache + Laravel
+│   └── phpunit.xml
 │
-├── frontend/                 # Interface Utilisateur (UI/UX)
-│   ├── scripts/              # Logique métier JavaScript (app.js, admin.js, etc.)
-│   ├── styles/               # Feuilles de style (main.css)
-│   ├── index.html            # Hub principal (Terminal, Vidéos, Articles)
-│   ├── login.html            # Page de connexion
-│   ├── register.html         # Page d'inscription
-│   ├── profile.html          # Espace personnel (Rôle, Logout)
-│   ├── admin.html            # Dashboard Admin (Gestion contenus & utilisateurs)
-│   └── Dockerfile            # Image Nginx Alpine
+├── frontend/                               # Interface Utilisateur (UI/UX)
+│   ├── scripts/                            # Logique métier JavaScript
+│   │   ├── app.js                          # Hub principal
+│   │   ├── login.js                        # Authentification
+│   │   ├── register.js                     # Inscription
+│   │   ├── profile.js                      # Profil utilisateur
+│   │   └── admin.js                        # Dashboard admin
+│   ├── styles/                             # Feuilles de style (main.css)
+│   ├── index.html                          # Hub principal
+│   ├── login.html                          # Page de connexion
+│   ├── register.html                       # Page d'inscription
+│   ├── profile.html                        # Espace personnel
+│   ├── admin.html                          # Dashboard Admin
+│   └── Dockerfile                          # Image Nginx Alpine
 │
-└── docker-compose.yml        # Orchestration des conteneurs
+└── docker-compose.yml                      # Orchestration des conteneurs
 ```
+
+---
+
+## 🔗 API Routes
+
+| Méthode | Route | Description | Auth | Rôle |
+|---|---|---|---|---|
+| `POST` | `/api/login` | Authentification | ❌ | — |
+| `POST` | `/api/register` | Inscription | ❌ | — |
+| `GET` | `/api/hub` | Données publiques du hub | ❌ | — |
+| `GET` | `/api/verify-token` | Validation de session | ✅ | — |
+| `POST` | `/api/videos` | Ajout de vidéo | ✅ | — |
+| `DELETE` | `/api/videos/{id}` | Suppression de vidéo | ✅ | admin, moderator |
+| `POST` | `/api/articles` | Ajout d'article | ✅ | — |
+| `GET` | `/api/users` | Liste des utilisateurs | ✅ | admin |
+| `PUT` | `/api/users/{id}/role` | Mise à jour du rôle | ✅ | admin |
 
 ---
 
@@ -67,22 +101,22 @@ Le projet est structuré en deux parties distinctes :
 - Remontée des "Articles" consultables dans une modale native (glassmorphism).
 
 ### 2. Système d'Authentification (Auth)
-- **Inscription (`register.php`)** : Création de compte sécurisée avec hachage des mots de passe (`password_hash`).
-- **Connexion (`login.php`)** : Génération d'un token d'accès stocké en DB et dans le `localStorage` du navigateur.
-- **Sécurité** : Protection systématique des requêtes API via le Header `Authorization: Bearer <token>`.
+- **Inscription (`AuthController@register`)** : Création de compte sécurisée avec hachage automatique des mots de passe via Eloquent Casting.
+- **Connexion (`AuthController@login`)** : Génération d'un token d'accès stocké en DB et dans le `localStorage` du navigateur.
+- **Sécurité** : Protection systématique des requêtes API via le Middleware `TokenAuth` et le Header `Authorization: Bearer <token>`.
 
 ### 3. Gestion des Rôles (RBAC)
-Le système gère 4 niveaux de privilèges :
+Le système gère 4 niveaux de privilèges via le Middleware `CheckRole` :
 - `viewer` (Défaut lors de l'inscription)
 - `sub` (Abonné standard)
 - `moderator` (Modérateur)
 - `admin` (Administrateur principal)
 
 ### 4. Back-office & Dashboard (`admin.html`)
-L'accès et l'affichage sont conditionnés par le rôle vérifié dynamiquement par le backend (`verify-token.php`).
+L'accès et l'affichage sont conditionnés par le rôle vérifié dynamiquement par le backend.
 - **Ajout de Contenu** : Formulaires pour ajouter des vidéos et des articles.
-- **Suppression de Contenu** : Boutons "Delete" injectés dynamiquement sous les vidéos pour les rôles `admin` et `moderator` (`delete-video.php`).
-- **Gestion des Utilisateurs** : Un tableau de bord réservé aux administrateurs (`list-users.php`) permettant de voir les dates de création et de modifier les rôles de n'importe quel compte en 1 clic via des menus déroulants customisés (`update-role.php`).
+- **Suppression de Contenu** : Boutons "Delete" injectés dynamiquement sous les vidéos pour les rôles `admin` et `moderator`.
+- **Gestion des Utilisateurs** : Un tableau de bord réservé aux administrateurs permettant de voir les dates de création et de modifier les rôles de n'importe quel compte en 1 clic via des menus déroulants customisés.
 
 ---
 
@@ -90,10 +124,25 @@ L'accès et l'affichage sont conditionnés par le rôle vérifié dynamiquement 
 
 Les tests sont cruciaux pour maintenir la stabilité des API lors de l'évolution du projet.
 La commande `docker compose run --rm backend-test` exécute la suite complète :
-- Vérification des réponses HTTP (200, 401, 403, 400, etc.).
-- Tests de succès et d'échec sur les requêtes sensibles.
-- Validation des permissions.
-- **Tear Down** : La base de données est automatiquement nettoyée après l'exécution des tests grâce à un Hook PHPUnit qui supprime les entrées de test.
+
+```bash
+# Lancer les tests
+docker compose run --rm backend-test
+
+# Résultat attendu
+# PHPUnit 11.x
+# ...............................................  30 / 30 (100%)
+# OK (30 tests, 45+ assertions)
+```
+
+Les tests couvrent :
+- **AuthTest** : Login (succès/échec/validation), Register (succès/doublon/validation), Verify Token.
+- **HubTest** : Réponse publique, structure JSON.
+- **VideoTest** : Ajout, suppression, permissions (admin/moderator/viewer).
+- **ArticleTest** : Ajout avec authentification.
+- **UserManagementTest** : Liste des utilisateurs, mise à jour des rôles, contrôle d'accès.
+
+Chaque test utilise le trait `RefreshDatabase` avec SQLite en mémoire (`:memory:`) pour une exécution rapide et isolée.
 
 ---
 
@@ -105,4 +154,20 @@ L'interface évite les bibliothèques lourdes. Le CSS (`main.css`) centralise le
 - Zéro attribut inline, HTML ultra-sémantique.
 
 ---
-*Ce projet démontre la capacité de créer un système complet de gestion d'utilisateurs et de rôles, accompagné d'une API sécurisée et testée de bout en bout, le tout avec un outillage logiciel moderne optimisé pour la performance locale avec Docker.*
+
+## 🐳 Démarrage Rapide
+
+```bash
+# Cloner le projet
+git clone https://github.com/Exoncode-stream/Exon.git && cd Exon
+
+# Lancer l'application (migrations + seed automatiques)
+docker compose up --build
+
+# Accéder au site
+# Frontend : http://localhost:8081
+# Backend API : http://localhost:8000/api/hub
+
+# Lancer les tests
+docker compose run --rm backend-test
+```
