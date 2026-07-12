@@ -5,67 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Exon — Full-Stack developer hub. Videos, articles, and links." />
     <title>Exon | Dev Hub</title>
-    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <main class="container">
-
-      <header class="top-bar">
-        <nav id="auth-container" class="auth-buttons"></nav>
-      </header>
-
-      <header class="hero fade-in">
-        <section class="terminal-block">
-          <header class="terminal-header">
-            <span class="terminal-dot"></span>
-            <span class="terminal-dot"></span>
-            <span class="terminal-dot"></span>
-            <span class="terminal-title">exon@hub:~</span>
-          </header>
-          <section class="terminal-body">
-            <p class="terminal-line">
-              <span class="terminal-prompt">$ </span>
-              <span id="typewriter-target"></span>
-              <span class="cursor" id="cursor"></span>
-            </p>
-            <p class="terminal-line terminal-output">
-              <h1 id="pseudo"></h1>
-            </p>
-            <p id="description"></p>
-          </section>
-        </section>
-      </header>
-
-      <nav id="links-container" class="links-grid fade-in fade-in-delay-1"></nav>
-
-      <section id="videos-section" class="fade-in fade-in-delay-2">
-        <h2 class="section-title">Latest Videos</h2>
-        <section id="videos-container" class="videos-grid"></section>
-      </section>
-
-      <section id="articles-section" class="fade-in fade-in-delay-3">
-        <h2 class="section-title">Articles</h2>
-        <section id="articles-container" class="articles-grid"></section>
-      </section>
-
-      <dialog id="article-modal">
-        <article>
-          <header>
-            <h2 id="modal-title"></h2>
-          </header>
-          <p id="modal-content"></p>
-          <footer>
-            <button id="close-modal">Close</button>
-          </footer>
-        </article>
-      </dialog>
-
-    </main>
-
-    <footer class="site-footer">
-      <p>Built with vanilla JS, PHP &amp; SQLite — no frameworks needed.</p>
-    </footer>
-
-    <script src="scripts/app.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
