@@ -4,13 +4,15 @@ export default function Terminal({ pseudo, description }) {
   const [displayText, setDisplayText] = useState("");
   const [showContent, setShowContent] = useState(false);
   const textRef = useRef("whoami");
-  const indexRef = useRef(0);
-
   useEffect(() => {
+    let currentIndex = 0;
+    setDisplayText("");
+    setShowContent(false);
+
     const id = setInterval(() => {
-      if (indexRef.current < textRef.current.length) {
-        setDisplayText((prev) => prev + textRef.current[indexRef.current]);
-        indexRef.current += 1;
+      if (currentIndex < textRef.current.length) {
+        currentIndex++;
+        setDisplayText(textRef.current.slice(0, currentIndex));
       } else {
         clearInterval(id);
         setTimeout(() => setShowContent(true), 350);

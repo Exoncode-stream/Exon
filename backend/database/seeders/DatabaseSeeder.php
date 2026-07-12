@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // --- Admin User ---
-        DB::table('users')->insert([
+        DB::table('users')->insertOrIgnore([
             'username' => 'admin',
             'password' => Hash::make('admin'),
             'role' => 'admin',
@@ -24,14 +24,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // --- Links ---
-        DB::table('links')->insert([
+        DB::table('links')->insertOrIgnore([
             ['name' => 'YouTube', 'url' => 'https://www.youtube.com/@exon9858'],
             ['name' => 'GitHub', 'url' => 'https://github.com/Exoncode-stream/'],
             ['name' => 'Discord', 'url' => 'guiireg'],
         ]);
 
         // --- Videos ---
-        DB::table('videos')->insert([
+        DB::table('videos')->insertOrIgnore([
             [
                 'title' => 'Creating Learn Code website with Next.js',
                 'youtube_id' => 'https://www.youtube.com/watch?v=ILW91gXl30Y',
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // --- Articles ---
-        DB::table('articles')->insert([
+        DB::table('articles')->insertOrIgnore([
             [
                 'title' => 'Introduction to Next.js',
                 'content' => 'Next.js is a React framework that gives you building blocks to create web applications...',
