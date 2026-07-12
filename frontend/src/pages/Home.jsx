@@ -5,6 +5,14 @@ import VideoCard from "../components/VideoCard";
 import ArticleCard from "../components/ArticleCard";
 import ArticleModal from "../components/ArticleModal";
 
+/**
+ * Home Component
+ * Main landing page for the application. Fetches and displays
+ * hub data including the user's terminal profile, links, videos,
+ * and articles.
+ *
+ * @returns {JSX.Element}
+ */
 export default function Home() {
   const [hub, setHub] = useState(null);
   const [error, setError] = useState(null);
@@ -49,14 +57,13 @@ export default function Home() {
     );
   }
 
-  /* Parse links from HTML string returned by the API */
   const links = hub.links || [];
 
   return (
     <article className="container">
       <Terminal pseudo={hub.pseudo} description={hub.description} />
 
-      {/* External Links */}
+      {/* External Links Navigation */}
       {links.length > 0 && (
         <nav className="links-grid fade-in delay-1" id="links-section">
           {links.map((link, i) => (
@@ -71,15 +78,6 @@ export default function Home() {
             </a>
           ))}
         </nav>
-      )}
-
-      {/* If linksHtml is returned instead of structured links */}
-      {!links.length && hub.linksHtml && (
-        <nav
-          className="links-grid fade-in delay-1"
-          id="links-section"
-          dangerouslySetInnerHTML={{ __html: hub.linksHtml }}
-        />
       )}
 
       {/* Videos */}

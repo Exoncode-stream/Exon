@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Hash;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
-     * Reproduces the initial data from the legacy init_db.php script.
+     * Seed the application's database with initial application data.
+     * Includes default administrator account, social links, sample videos,
+     * and introductory articles.
+     *
+     * @return void
      */
     public function run(): void
     {
-        // --- Admin User ---
+        // Create default administrator account
         DB::table('users')->insertOrIgnore([
             'username' => 'admin',
             'password' => Hash::make('admin'),
@@ -23,14 +26,14 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // --- Links ---
+        // Initialize social media and contact links
         DB::table('links')->insertOrIgnore([
             ['name' => 'YouTube', 'url' => 'https://www.youtube.com/@exon9858'],
             ['name' => 'GitHub', 'url' => 'https://github.com/Exoncode-stream/'],
             ['name' => 'Discord', 'url' => 'guiireg'],
         ]);
 
-        // --- Videos ---
+        // Seed introductory sample videos
         DB::table('videos')->insertOrIgnore([
             [
                 'title' => 'Creating Learn Code website with Next.js',
@@ -39,7 +42,7 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        // --- Articles ---
+        // Populate initial platform articles
         DB::table('articles')->insertOrIgnore([
             [
                 'title' => 'Introduction to Next.js',
