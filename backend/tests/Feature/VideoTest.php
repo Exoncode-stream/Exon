@@ -16,13 +16,24 @@ class VideoTest extends TestCase
     {
         $plainToken = Str::random(64);
         $user = User::create([
-            'username' => 'user_' . $role,
+            'username' => 'user_vid_' . $role,
             'password' => 'password123',
             'role' => $role,
             'token' => hash('sha256', $plainToken),
         ]);
 
         return [$user, $plainToken];
+    }
+
+    public function test_public_can_get_videos_list(): void
+    {
+        Video::create(['title' => 'V1', 'youtube_id' => 'yt1', 'category' => 'Cat1']);
+        Video::create(['title' => 'V2', 'youtube_id' => 'yt2', 'category' => 'Cat2']);
+
+        $response = $this->getJson('/api/videos');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(2);
     }
 
     public function test_authenticated_user_can_create_video(): void
@@ -42,6 +53,29 @@ class VideoTest extends TestCase
         $this->assertDatabaseHas('videos', [
             'title' => 'Laravel 12 Tutorial',
             'youtube_id' => 'dQw4w9WgXcQ',
+        ]);
+    }
+
+    public function test_admin_can_update_video(): void
+    {
+        [$admin, $token] = $this->createUserWithRole('admin');
+        $video = Video::create(['title' => 'Old Title', 'youtube_id' => 'old_id', 'category' => 'Old Cat']);
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson('/api/videos/' . $video->id, [
+                'title' => 'New Title',
+                'youtube_id' => 'new_id',
+                'category' => 'New Cat',
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'Vidéo mise à jour avec succès !']);
+
+        $this->assertDatabaseHas('videos', [
+            'id' => $video->id,
+            'title' => 'New Title',
+            'youtube_id' => 'new_id',
+            'category' => 'New Cat',
         ]);
     }
 

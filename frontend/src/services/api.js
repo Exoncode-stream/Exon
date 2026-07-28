@@ -62,9 +62,23 @@ export async function logoutApi() {
   return handleResponse(res);
 }
 
+export async function fetchVideos() {
+  const res = await fetch(`${API_BASE}/videos`);
+  return handleResponse(res);
+}
+
 export async function addVideo(title, youtube_id, category) {
   const res = await fetch(`${API_BASE}/videos`, {
     method: 'POST',
+    headers: jsonHeaders(),
+    body: JSON.stringify({ title, youtube_id, category }),
+  });
+  return handleResponse(res);
+}
+
+export async function updateVideo(id, title, youtube_id, category) {
+  const res = await fetch(`${API_BASE}/videos/${id}`, {
+    method: 'PUT',
     headers: jsonHeaders(),
     body: JSON.stringify({ title, youtube_id, category }),
   });
@@ -79,11 +93,33 @@ export async function deleteVideo(id) {
   return handleResponse(res);
 }
 
+export async function fetchArticles() {
+  const res = await fetch(`${API_BASE}/articles`);
+  return handleResponse(res);
+}
+
 export async function addArticle(title, content) {
   const res = await fetch(`${API_BASE}/articles`, {
     method: 'POST',
     headers: jsonHeaders(),
     body: JSON.stringify({ title, content }),
+  });
+  return handleResponse(res);
+}
+
+export async function updateArticle(id, title, content) {
+  const res = await fetch(`${API_BASE}/articles/${id}`, {
+    method: 'PUT',
+    headers: jsonHeaders(),
+    body: JSON.stringify({ title, content }),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteArticle(id) {
+  const res = await fetch(`${API_BASE}/articles/${id}`, {
+    method: 'DELETE',
+    headers: jsonHeaders(),
   });
   return handleResponse(res);
 }

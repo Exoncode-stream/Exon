@@ -30,6 +30,8 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1');
 Route::get('/hub', [HubController::class, 'index']);
 Route::get('/links', [LinkController::class, 'index']);
+Route::get('/videos', [VideoController::class, 'index']);
+Route::get('/articles', [ArticleController::class, 'index']);
 
 // --- Authenticated Routes (Token Required) ---
 Route::middleware('token.auth')->group(function () {
@@ -44,12 +46,20 @@ Route::middleware('token.auth')->group(function () {
     Route::delete('/links/{id}', [LinkController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
-    // Content Management (any authenticated user can add)
+    // Content Creation (any authenticated user can add)
     Route::post('/videos', [VideoController::class, 'store']);
     Route::post('/articles', [ArticleController::class, 'store']);
 
-    // Content Deletion (admin or moderator only)
+    // Video Management (admin or moderator)
+    Route::put('/videos/{id}', [VideoController::class, 'update'])
+        ->middleware('role:admin,moderator');
     Route::delete('/videos/{id}', [VideoController::class, 'destroy'])
+        ->middleware('role:admin,moderator');
+
+    // Article Management (admin or moderator)
+    Route::put('/articles/{id}', [ArticleController::class, 'update'])
+        ->middleware('role:admin,moderator');
+    Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
     // User Management (admin only)
