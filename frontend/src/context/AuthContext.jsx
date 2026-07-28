@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { verifyToken as apiVerifyToken } from '../services/api';
+import { verifyToken as apiVerifyToken, logoutApi } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -45,11 +45,17 @@ export function AuthProvider({ children }) {
     setUser({ username, role });
   }
 
-  function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
-    setUser(null);
+  async function logout() {
+    try {
+      await logoutApi();
+    } catch {
+      // Ignore API logout errors if token already invalidated
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+      setUser(null);
+    }
   }
 
   return (

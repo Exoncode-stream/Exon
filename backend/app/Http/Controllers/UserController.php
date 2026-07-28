@@ -50,8 +50,18 @@ class UserController extends Controller
             return response()->json(['error' => 'User not found'], 404);
         }
 
+        $authUser = $request->get('auth_user');
+        if ($authUser && $authUser->id === $user->id && $newRole !== 'admin') {
+            $otherAdminsCount = User::where('role', 'admin')->where('id', '!=', $user->id)->count();
+            if ($otherAdminsCount === 0) {
+                return response()->json([
+                    'error' => 'Impossible de modifier votre propre rôle car vous êtes le dernier administrateur.',
+                ], 400);
+            }
+        }
+
         $user->update(['role' => $newRole]);
 
-        return response()->json(['message' => 'Role updated successfully']);
+        return response()->json(['message' => 'Rôle mis à jour avec succès !']);
     }
 }

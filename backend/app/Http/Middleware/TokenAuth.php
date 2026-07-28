@@ -15,13 +15,16 @@ class TokenAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
+        $rawToken = $request->bearerToken();
 
-        if (!$token) {
+        if (!$rawToken) {
             return response()->json(['error' => 'Unauthorized - Token missing'], 401);
         }
 
-        $user = User::where('token', $token)->first();
+        // Search by SHA-256 hash first, fallback to raw token for legacy tokens
+        $hashedToken = hash('sha256', $rawToken);
+        $user = User::where('token', $hashedToken)->first() 
+             ?? User::where('token', $rawToken)->first();
 
         if (!$user) {
             return response()->json(['error' => 'Unauthorized - Invalid token'], 401);
