@@ -16,6 +16,10 @@ class User extends Model
         'role',
     ];
 
+    protected $attributes = [
+        'role' => 'viewer',
+    ];
+
     protected $hidden = [
         'password',
         'token',
