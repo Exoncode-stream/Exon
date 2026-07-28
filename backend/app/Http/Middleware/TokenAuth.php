@@ -7,30 +7,39 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Middleware vérifiant la présence et la validité du token Bearer transmis dans l'en-tête Authorization.
+ */
 class TokenAuth
 {
     /**
-     * Authenticate the request via a Bearer token stored in the users table.
-     * Replaces the manual token extraction logic from the legacy PHP files.
+     * Traitement de la requête entrante.
+     * 
+     * Étapes :
+     * 1. Extraire le token 'Bearer <token>' de l'en-tête HTTP.
+     * 2. Calculer le hash SHA-256 du token et rechercher l'utilisateur correspondant en base de données.
+     * 3. Injecter l'utilisateur trouvé ($request->merge(['auth_user' => $user])) pour les middlewares et controllers suivants.
      */
     public function handle(Request $request, Closure $next): Response
     {
         $rawToken = $request->bearerToken();
 
+        // Si aucun token n'est présent dans le header
         if (!$rawToken) {
-            return response()->json(['error' => 'Unauthorized - Token missing'], 401);
+            return response()->json(['error' => 'Non autorisé - Token manquant'], 401);
         }
 
-        // Search by SHA-256 hash first, fallback to raw token for legacy tokens
+        // Recherche par empreinte SHA-256 (avec fallback pour les jetons historiques)
         $hashedToken = hash('sha256', $rawToken);
         $user = User::where('token', $hashedToken)->first() 
              ?? User::where('token', $rawToken)->first();
 
+        // Si aucun utilisateur n'est associé au token fourni
         if (!$user) {
-            return response()->json(['error' => 'Unauthorized - Invalid token'], 401);
+            return response()->json(['error' => 'Non autorisé - Token invalide'], 401);
         }
 
-        // Store the authenticated user on the request for downstream use
+        // Injection de l'utilisateur authentifié dans la requête
         $request->merge(['auth_user' => $user]);
 
         return $next($request);

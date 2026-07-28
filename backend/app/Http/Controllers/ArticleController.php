@@ -6,11 +6,14 @@ use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Controller gérant les opérations CRUD sur les articles du hub.
+ */
 class ArticleController extends Controller
 {
     /**
      * GET /api/articles
-     * List all articles.
+     * Récupère la liste de tous les articles publiés.
      */
     public function index(): JsonResponse
     {
@@ -19,10 +22,12 @@ class ArticleController extends Controller
 
     /**
      * POST /api/articles
-     * Adds a new article. Requires authentication.
+     * Ajoute un nouvel article en base de données.
+     * Accessible à tout utilisateur authentifié.
      */
     public function store(Request $request): JsonResponse
     {
+        // Validation des entrées
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -31,6 +36,7 @@ class ArticleController extends Controller
             'content.required' => 'Le contenu est requis.',
         ]);
 
+        // Nettoyage et enregistrement de l'article
         $article = Article::create([
             'title' => trim(htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8')),
             'content' => trim(htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8')),
@@ -44,7 +50,8 @@ class ArticleController extends Controller
 
     /**
      * PUT /api/articles/{id}
-     * Updates an existing article. Requires admin or moderator role.
+     * Mettre à jour un article existant.
+     * Accessible uniquement aux administrateurs et modérateurs.
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -75,7 +82,8 @@ class ArticleController extends Controller
 
     /**
      * DELETE /api/articles/{id}
-     * Deletes an article. Requires admin or moderator role.
+     * Supprime un article.
+     * Accessible uniquement aux administrateurs et modérateurs.
      */
     public function destroy(int $id): JsonResponse
     {

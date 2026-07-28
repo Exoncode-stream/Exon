@@ -48,7 +48,7 @@ class VideoTest extends TestCase
             ]);
 
         $response->assertStatus(201)
-            ->assertJson(['message' => 'Video added successfully!']);
+            ->assertJson(['message' => 'Vidéo ajoutée avec succès !']);
 
         $this->assertDatabaseHas('videos', [
             'title' => 'Laravel 12 Tutorial',
@@ -92,7 +92,7 @@ class VideoTest extends TestCase
             ->deleteJson('/api/videos/' . $video->id);
 
         $response->assertStatus(200)
-            ->assertJson(['message' => 'Video deleted successfully']);
+            ->assertJson(['message' => 'Vidéo supprimée avec succès']);
 
         $this->assertDatabaseMissing('videos', ['id' => $video->id]);
     }

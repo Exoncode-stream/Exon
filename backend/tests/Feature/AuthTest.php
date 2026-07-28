@@ -104,7 +104,7 @@ class AuthTest extends TestCase
         ]);
 
         $response->assertStatus(401)
-            ->assertJson(['error' => 'Invalid credentials']);
+            ->assertJson(['error' => 'Identifiants invalides']);
     }
 
     public function test_user_can_verify_valid_token(): void
@@ -134,7 +134,7 @@ class AuthTest extends TestCase
             ->getJson('/api/verify-token');
 
         $response->assertStatus(401)
-            ->assertJson(['error' => 'Unauthorized - Invalid token']);
+            ->assertJson(['error' => 'Non autorisé - Token invalide']);
     }
 
     public function test_user_can_logout_and_invalidate_token(): void

@@ -6,11 +6,14 @@ use App\Models\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Controller gérant les vidéos YouTube présentées sur la plateforme.
+ */
 class VideoController extends Controller
 {
     /**
      * GET /api/videos
-     * List all videos.
+     * Retourne la liste de toutes les vidéos enregistrées.
      */
     public function index(): JsonResponse
     {
@@ -19,7 +22,7 @@ class VideoController extends Controller
 
     /**
      * POST /api/videos
-     * Adds a new video. Requires authentication.
+     * Ajoute une nouvelle vidéo. Accessible à tout utilisateur authentifié.
      */
     public function store(Request $request): JsonResponse
     {
@@ -40,14 +43,15 @@ class VideoController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Video added successfully!',
+            'message' => 'Vidéo ajoutée avec succès !',
             'video' => $video,
         ], 201);
     }
 
     /**
      * PUT /api/videos/{id}
-     * Updates an existing video. Requires admin or moderator role.
+     * Met à jour les informations d'une vidéo (titre, id youtube, catégorie).
+     * Requis : Rôle administrateur ou modérateur.
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -81,18 +85,18 @@ class VideoController extends Controller
 
     /**
      * DELETE /api/videos/{id}
-     * Deletes a video. Requires admin or moderator role.
+     * Supprime une vidéo. Requis : Rôle administrateur ou modérateur.
      */
     public function destroy(int $id): JsonResponse
     {
         $video = Video::find($id);
 
         if (!$video) {
-            return response()->json(['error' => 'Video not found'], 404);
+            return response()->json(['error' => 'Vidéo non trouvée'], 404);
         }
 
         $video->delete();
 
-        return response()->json(['message' => 'Video deleted successfully']);
+        return response()->json(['message' => 'Vidéo supprimée avec succès']);
     }
 }

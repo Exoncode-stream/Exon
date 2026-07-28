@@ -6,11 +6,14 @@ use App\Models\Link;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Controller gérant les liens externes affichés dans la barre de navigation du Hub.
+ */
 class LinkController extends Controller
 {
     /**
      * GET /api/links
-     * Retrieve all links.
+     * Récupère l'ensemble des liens externes enregistrés.
      */
     public function index(): JsonResponse
     {
@@ -19,7 +22,8 @@ class LinkController extends Controller
 
     /**
      * POST /api/links
-     * Create a new link. Requires authentication.
+     * Ajoute un nouveau lien externe.
+     * Requis : Rôle administrateur ou modérateur.
      */
     public function store(Request $request): JsonResponse
     {
@@ -45,7 +49,8 @@ class LinkController extends Controller
 
     /**
      * PUT /api/links/{id}
-     * Update an existing link. Requires admin or moderator role.
+     * Met à jour un lien existant.
+     * Requis : Rôle administrateur ou modérateur.
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -77,7 +82,8 @@ class LinkController extends Controller
 
     /**
      * DELETE /api/links/{id}
-     * Delete a link. Requires admin or moderator role.
+     * Supprime un lien externe.
+     * Requis : Rôle administrateur ou modérateur.
      */
     public function destroy(int $id): JsonResponse
     {

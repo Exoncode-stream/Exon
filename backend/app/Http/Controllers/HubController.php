@@ -7,15 +7,18 @@ use App\Models\Link;
 use App\Models\Video;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Controller fournissant les données publiques regroupées pour la page d'accueil du Hub.
+ */
 class HubController extends Controller
 {
     /**
-     * Retrieve all public data for the hub.
-     * 
-     * Returns a collection of links, videos, and articles
-     * to be consumed by the frontend application.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * GET /api/hub
+     * Retourne l'ensemble des données nécessaires pour la page d'accueil du Hub :
+     * - Informations de profil du Hub (pseudo, description)
+     * - Liste des liens externes
+     * - Liste des vidéos
+     * - Liste des articles
      */
     public function index(): JsonResponse
     {

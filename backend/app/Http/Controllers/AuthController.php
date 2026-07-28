@@ -8,37 +8,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/**
+ * Controller gérant l'authentification des utilisateurs (Connexion, Inscription, Déconnexion et Vérification du token).
+ */
 class AuthController extends Controller
 {
     /**
      * POST /api/login
-     * Authenticates a user and returns a bearer token.
-     * Replaces: login.php
+     * Authentifie un utilisateur avec ses identifiants et retourne un jeton d'accès Bearer.
+     * 
+     * Sécurité : Le jeton renvoyé est aléatoire (64 caractères), mais seule son empreinte SHA-256
+     * est sauvegardée en base de données pour empêcher le vol de session en cas de fuite de DB.
      */
     public function login(Request $request): JsonResponse
     {
+        // 1. Validation des champs requis
         $data = $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ], [
-            'username.required' => 'Missing credentials',
-            'password.required' => 'Missing credentials',
+            'username.required' => 'Identifiant requis.',
+            'password.required' => 'Mot de passe requis.',
         ]);
 
+        // 2. Recherche de l'utilisateur par son pseudo
         $user = User::where('username', $data['username'])->first();
 
+        // 3. Vérification du mot de passe avec le système de hachage Bcrypt/Argon de Laravel
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return response()->json(['error' => 'Identifiants invalides'], 401);
         }
 
-        // Generate a new token and persist its SHA-256 hash
+        // 4. Génération d'un token aléatoire brut et stockage de son empreinte SHA-256
         $plainToken = Str::random(64);
         $user->update(['token' => hash('sha256', $plainToken)]);
 
+        // 5. Envoi du token brut au client (SPA React)
         return response()->json([
             'success' => true,
             'token' => $plainToken,
-            'message' => 'Login successful',
+            'message' => 'Connexion réussie !',
             'username' => $user->username,
             'role' => $user->role,
         ]);
@@ -46,10 +55,15 @@ class AuthController extends Controller
 
     /**
      * POST /api/register
-     * Creates a new user account with 'viewer' role.
+     * Crée un nouveau compte utilisateur avec le rôle par défaut 'viewer'.
+     * 
+     * Règles de validation :
+     * - Nom d'utilisateur : 3 à 50 caractères (lettres, chiffres, tirets, underscores).
+     * - Mot de passe : minimum 8 caractères.
      */
     public function register(Request $request): JsonResponse
     {
+        // 1. Validation stricte des données reçues
         $data = $request->validate([
             'username' => 'required|string|min:3|max:50|regex:/^[a-zA-Z0-9_\-]+$/',
             'password' => 'required|string|min:8|max:100',
@@ -63,14 +77,15 @@ class AuthController extends Controller
             'password.max' => 'Le mot de passe ne peut pas dépasser 100 caractères.',
         ]);
 
-        // Check for duplicate username
+        // 2. Empêcher la création de pseudos en double (doublons)
         if (User::where('username', $data['username'])->exists()) {
             return response()->json(['error' => 'Ce nom d\'utilisateur existe déjà.'], 409);
         }
 
+        // 3. Création du compte (le mot de passe est automatiquement haché via le Cast du modèle User)
         User::create([
             'username' => trim($data['username']),
-            'password' => $data['password'], // Hashed automatically by the model cast
+            'password' => $data['password'],
             'role' => 'viewer',
         ]);
 
@@ -82,10 +97,11 @@ class AuthController extends Controller
 
     /**
      * POST /api/logout
-     * Invalidates the current user token.
+     * Déconnecte l'utilisateur en effaçant son token de session côté serveur.
      */
     public function logout(Request $request): JsonResponse
     {
+        // Récupération de l'utilisateur injecté par le middleware TokenAuth
         $user = $request->get('auth_user');
         if ($user) {
             $user->update(['token' => null]);
@@ -96,14 +112,14 @@ class AuthController extends Controller
 
     /**
      * GET /api/verify-token
-     * Validates a bearer token and returns the associated user info.
+     * Vérifie la validité du token Bearer transmis et retourne les infos de profil.
      */
     public function verifyToken(Request $request): JsonResponse
     {
         $user = $request->get('auth_user');
 
         return response()->json([
-            'message' => 'Token valid',
+            'message' => 'Token valide',
             'valid' => true,
             'username' => $user->username,
             'role' => $user->role,
