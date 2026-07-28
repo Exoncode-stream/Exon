@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function ArticleModal({ article, onClose }) {
   const dialogRef = useRef(null);
@@ -14,6 +15,14 @@ export default function ArticleModal({ article, onClose }) {
 
   if (!article) return null;
 
+  // Helper to decode HTML entities if content was htmlspecialchars-encoded in DB
+  const rawContent = (article.content || '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'");
+
   return (
     <dialog ref={dialogRef} className="modal" id="article-modal" onClose={onClose}>
       <article className="modal-content">
@@ -23,7 +32,9 @@ export default function ArticleModal({ article, onClose }) {
             ✕
           </button>
         </header>
-        <p className="modal-body">{article.content}</p>
+        <div className="modal-body markdown-body" id="article-modal-body">
+          <ReactMarkdown>{rawContent}</ReactMarkdown>
+        </div>
       </article>
     </dialog>
   );
