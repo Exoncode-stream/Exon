@@ -54,6 +54,14 @@ export async function verifyToken() {
   return handleResponse(res);
 }
 
+export async function logoutApi() {
+  const res = await fetch(`${API_BASE}/logout`, {
+    method: 'POST',
+    headers: jsonHeaders(),
+  });
+  return handleResponse(res);
+}
+
 export async function addVideo(title, youtube_id, category) {
   const res = await fetch(`${API_BASE}/videos`, {
     method: 'POST',
@@ -76,6 +84,37 @@ export async function addArticle(title, content) {
     method: 'POST',
     headers: jsonHeaders(),
     body: JSON.stringify({ title, content }),
+  });
+  return handleResponse(res);
+}
+
+export async function fetchLinks() {
+  const res = await fetch(`${API_BASE}/links`);
+  return handleResponse(res);
+}
+
+export async function addLink(name, url) {
+  const res = await fetch(`${API_BASE}/links`, {
+    method: 'POST',
+    headers: jsonHeaders(),
+    body: JSON.stringify({ name, url }),
+  });
+  return handleResponse(res);
+}
+
+export async function updateLink(id, name, url) {
+  const res = await fetch(`${API_BASE}/links/${id}`, {
+    method: 'PUT',
+    headers: jsonHeaders(),
+    body: JSON.stringify({ name, url }),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteLink(id) {
+  const res = await fetch(`${API_BASE}/links/${id}`, {
+    method: 'DELETE',
+    headers: jsonHeaders(),
   });
   return handleResponse(res);
 }

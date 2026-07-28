@@ -4,6 +4,10 @@ import {
   addArticle,
   fetchUsers,
   updateUserRole,
+  fetchLinks,
+  addLink,
+  updateLink,
+  deleteLink,
 } from "../services/api";
 import FormMessage from "../components/FormMessage";
 
@@ -21,6 +25,14 @@ export default function Admin() {
   const [articleMsg, setArticleMsg] = useState("");
   const [articleMsgType, setArticleMsgType] = useState("");
 
+  /* ─── Links Form & CRUD ─── */
+  const [links, setLinks] = useState([]);
+  const [linkName, setLinkName] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkMsg, setLinkMsg] = useState("");
+  const [linkMsgType, setLinkMsgType] = useState("");
+  const [editingLink, setEditingLink] = useState(null);
+
   /* ─── Users ─── */
   const [users, setUsers] = useState([]);
 
@@ -33,9 +45,19 @@ export default function Admin() {
     }
   }, []);
 
+  const loadLinks = useCallback(async () => {
+    try {
+      const data = await fetchLinks();
+      setLinks(data || []);
+    } catch (err) {
+      console.error("Failed to load links", err);
+    }
+  }, []);
+
   useEffect(() => {
     loadUsers();
-  }, [loadUsers]);
+    loadLinks();
+  }, [loadUsers, loadLinks]);
 
   async function handleAddVideo(e) {
     e.preventDefault();
@@ -72,6 +94,48 @@ export default function Admin() {
     }
   }
 
+  async function handleAddLink(e) {
+    e.preventDefault();
+    setLinkMsg("Envoi…");
+    setLinkMsgType("");
+
+    try {
+      const res = await addLink(linkName, linkUrl);
+      setLinkMsg(res.message || "Lien ajouté !");
+      setLinkMsgType("success");
+      setLinkName("");
+      setLinkUrl("");
+      loadLinks();
+    } catch (err) {
+      setLinkMsg(err.message);
+      setLinkMsgType("error");
+    }
+  }
+
+  async function handleUpdateLink(e) {
+    e.preventDefault();
+    if (!editingLink) return;
+
+    try {
+      await updateLink(editingLink.id, editingLink.name, editingLink.url);
+      setEditingLink(null);
+      loadLinks();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  async function handleDeleteLink(id) {
+    if (!window.confirm("Voulez-vous vraiment supprimer ce lien ?")) return;
+
+    try {
+      await deleteLink(id);
+      setLinks((prev) => prev.filter((l) => l.id !== id));
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
   async function handleRoleChange(userId, newRole) {
     try {
       await updateUserRole(userId, newRole);
@@ -83,6 +147,132 @@ export default function Admin() {
   return (
     <article className="admin-page">
       <h1>admin-panel</h1>
+
+      {/* ─── Links Management ─── */}
+      <section className="admin-section" id="links-section">
+        <h2 className="section-title">Gestion des Liens</h2>
+        <form onSubmit={handleAddLink} className="form-card" id="add-link-form">
+          <fieldset className="form-group">
+            <label htmlFor="link-name">Nom du lien</label>
+            <input
+              type="text"
+              id="link-name"
+              placeholder="Ex: GitHub, Twitter, Discord..."
+              value={linkName}
+              onChange={(e) => setLinkName(e.target.value)}
+              required
+            />
+          </fieldset>
+          <fieldset className="form-group">
+            <label htmlFor="link-url">URL</label>
+            <input
+              type="url"
+              id="link-url"
+              placeholder="https://github.com/mon-profil"
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+              required
+            />
+          </fieldset>
+          <button type="submit" className="btn-primary" id="submit-link">
+            Ajouter le lien
+          </button>
+        </form>
+        <FormMessage message={linkMsg} type={linkMsgType} />
+
+        {/* Formulaire d'Édition de lien */}
+        {editingLink && (
+          <form onSubmit={handleUpdateLink} className="form-card" id="edit-link-form" style={{ marginTop: "1rem" }}>
+            <h3>Modifier le lien #{editingLink.id}</h3>
+            <fieldset className="form-group">
+              <label htmlFor="edit-link-name">Nom</label>
+              <input
+                type="text"
+                id="edit-link-name"
+                value={editingLink.name}
+                onChange={(e) => setEditingLink({ ...editingLink, name: e.target.value })}
+                required
+              />
+            </fieldset>
+            <fieldset className="form-group">
+              <label htmlFor="edit-link-url">URL</label>
+              <input
+                type="url"
+                id="edit-link-url"
+                value={editingLink.url}
+                onChange={(e) => setEditingLink({ ...editingLink, url: e.target.value })}
+                required
+              />
+            </fieldset>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <button type="submit" className="btn-primary" id="save-link-edit">
+                Enregistrer
+              </button>
+              <button
+                type="button"
+                className="btn-danger"
+                onClick={() => setEditingLink(null)}
+                id="cancel-link-edit"
+              >
+                Annuler
+              </button>
+            </div>
+          </form>
+        )}
+
+        <figure className="table-wrap" style={{ marginTop: "1.5rem" }}>
+          <table className="users-table" id="links-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>URL</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {links.map((link) => (
+                <tr key={link.id}>
+                  <td>{link.id}</td>
+                  <td>{link.name}</td>
+                  <td>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent-color, #00ff66)" }}>
+                      {link.url}
+                    </a>
+                  </td>
+                  <td>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <button
+                        type="button"
+                        className="pill-link"
+                        onClick={() => setEditingLink(link)}
+                        id={`edit-link-btn-${link.id}`}
+                      >
+                        Éditer
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-danger"
+                        onClick={() => handleDeleteLink(link.id)}
+                        id={`delete-link-btn-${link.id}`}
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {links.length === 0 && (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    Aucun lien enregistré
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </figure>
+      </section>
 
       {/* ─── Add Video ─── */}
       <section className="admin-section" id="add-video-section">

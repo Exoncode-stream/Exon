@@ -6,33 +6,43 @@ use App\Http\Controllers\HubController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LinkController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes — Exon Backend
 |--------------------------------------------------------------------------
 |
-| Route mapping from legacy PHP files:
+| Route mapping:
 |   login.php        → POST   /api/login
 |   register.php     → POST   /api/register
 |   verify-token.php → GET    /api/verify-token
 |   index.php        → GET    /api/hub
-|   add-video.php    → POST   /api/videos
-|   delete-video.php → DELETE /api/videos/{id}
-|   add-article.php  → POST   /api/articles
-|   list-users.php   → GET    /api/users
-|   update-role.php  → PUT    /api/users/{id}/role
+|   links            → GET|POST|PUT|DELETE /api/links
+|   videos           → POST|DELETE /api/videos
+|   articles         → POST   /api/articles
+|   users            → GET|PUT /api/users
 |
 */
 
 // --- Public Routes ---
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1');
 Route::get('/hub', [HubController::class, 'index']);
+Route::get('/links', [LinkController::class, 'index']);
 
 // --- Authenticated Routes (Token Required) ---
 Route::middleware('token.auth')->group(function () {
     Route::get('/verify-token', [AuthController::class, 'verifyToken']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Link Management (admin or moderator)
+    Route::post('/links', [LinkController::class, 'store'])
+        ->middleware('role:admin,moderator');
+    Route::put('/links/{id}', [LinkController::class, 'update'])
+        ->middleware('role:admin,moderator');
+    Route::delete('/links/{id}', [LinkController::class, 'destroy'])
+        ->middleware('role:admin,moderator');
 
     // Content Management (any authenticated user can add)
     Route::post('/videos', [VideoController::class, 'store']);

@@ -68,13 +68,13 @@ export default function Home() {
         <nav className="links-grid fade-in delay-1" id="links-section">
           {links.map((link, i) => (
             <a
-              key={i}
+              key={link.id || i}
               href={link.url}
               className="pill-link"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {link.label}
+              {link.label || link.name}
             </a>
           ))}
         </nav>
