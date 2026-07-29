@@ -13,9 +13,14 @@ function jsonHeaders() {
 }
 
 async function handleResponse(response) {
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error(`Erreur serveur (${response.status}) : Réponse non valide.`);
+  }
   if (!response.ok) {
-    throw new Error(data.error || `Request failed (${response.status})`);
+    throw new Error(data.error || data.message || `Échec de la requête (${response.status})`);
   }
   return data;
 }
