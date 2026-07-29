@@ -7,22 +7,13 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes — Exon Backend
 |--------------------------------------------------------------------------
-|
-| Route mapping:
-|   login.php        → POST   /api/login
-|   register.php     → POST   /api/register
-|   verify-token.php → GET    /api/verify-token
-|   index.php        → GET    /api/hub
-|   links            → GET|POST|PUT|DELETE /api/links
-|   videos           → POST|DELETE /api/videos
-|   articles         → POST   /api/articles
-|   users            → GET|PUT /api/users
-|
 */
 
 // --- Public Routes ---
@@ -32,11 +23,17 @@ Route::get('/hub', [HubController::class, 'index']);
 Route::get('/links', [LinkController::class, 'index']);
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/articles', [ArticleController::class, 'index']);
+Route::get('/{type}/{id}/comments', [CommentController::class, 'index'])->where('type', 'articles|videos');
 
 // --- Authenticated Routes (Token Required) ---
 Route::middleware('token.auth')->group(function () {
     Route::get('/verify-token', [AuthController::class, 'verifyToken']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Comments & Likes (all authenticated users)
+    Route::post('/{type}/{id}/comments', [CommentController::class, 'store'])->where('type', 'articles|videos');
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
+    Route::post('/{type}/{id}/like', [LikeController::class, 'toggle'])->where('type', 'articles|videos');
 
     // Link Management (admin or moderator)
     Route::post('/links', [LinkController::class, 'store'])

@@ -17,8 +17,8 @@ class HubController extends Controller
      * Retourne l'ensemble des données nécessaires pour la page d'accueil du Hub :
      * - Informations de profil du Hub (pseudo, description)
      * - Liste des liens externes
-     * - Liste des vidéos
-     * - Liste des articles
+     * - Liste des vidéos (avec compteurs de likes et commentaires)
+     * - Liste des articles (avec compteurs de likes et commentaires)
      */
     public function index(): JsonResponse
     {
@@ -26,8 +26,8 @@ class HubController extends Controller
             'pseudo' => 'Exon',
             'description' => 'Full-Stack student developer, learning code and sharing these on my socials',
             'links' => Link::all(['id', 'name as label', 'url']),
-            'videos' => Video::all(['id', 'title', 'youtube_id', 'category']),
-            'articles' => Article::all(['id', 'title', 'content']),
+            'videos' => Video::withCount(['likes', 'comments'])->get(['id', 'title', 'youtube_id', 'category']),
+            'articles' => Article::withCount(['likes', 'comments'])->get(['id', 'title', 'content']),
         ]);
     }
 }

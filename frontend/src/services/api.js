@@ -175,3 +175,35 @@ export async function updateUserRole(userId, role) {
   });
   return handleResponse(res);
 }
+
+/* ─── Comments & Likes ─── */
+
+export async function fetchComments(type, id) {
+  const res = await fetch(`${API_BASE}/${type}/${id}/comments`);
+  return handleResponse(res);
+}
+
+export async function addComment(type, id, content) {
+  const res = await fetch(`${API_BASE}/${type}/${id}/comments`, {
+    method: 'POST',
+    headers: jsonHeaders(),
+    body: JSON.stringify({ content }),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteComment(id) {
+  const res = await fetch(`${API_BASE}/comments/${id}`, {
+    method: 'DELETE',
+    headers: jsonHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function toggleLike(type, id) {
+  const res = await fetch(`${API_BASE}/${type}/${id}/like`, {
+    method: 'POST',
+    headers: jsonHeaders(),
+  });
+  return handleResponse(res);
+}
