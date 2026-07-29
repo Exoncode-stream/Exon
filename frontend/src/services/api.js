@@ -207,3 +207,25 @@ export async function toggleLike(type, id) {
   });
   return handleResponse(res);
 }
+
+/* ─── Profile & Account ─── */
+
+export async function fetchProfile() {
+  const res = await fetch(`${API_BASE}/profile`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function changePassword(currentPassword, newPassword, newPasswordConfirmation) {
+  const res = await fetch(`${API_BASE}/profile/password`, {
+    method: 'PUT',
+    headers: jsonHeaders(),
+    body: JSON.stringify({
+      current_password: currentPassword,
+      new_password: newPassword,
+      new_password_confirmation: newPasswordConfirmation,
+    }),
+  });
+  return handleResponse(res);
+}

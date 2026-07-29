@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,10 @@ Route::get('/{type}/{id}/comments', [CommentController::class, 'index'])->where(
 Route::middleware('token.auth')->group(function () {
     Route::get('/verify-token', [AuthController::class, 'verifyToken']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Profile Management
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->middleware('throttle:5,1');
 
     // Comments & Likes (all authenticated users)
     Route::post('/{type}/{id}/comments', [CommentController::class, 'store'])->where('type', 'articles|videos');
