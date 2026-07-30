@@ -36,9 +36,9 @@ class VideoTest extends TestCase
             ->assertJsonCount(2);
     }
 
-    public function test_authenticated_user_can_create_video(): void
+    public function test_authenticated_admin_can_create_video(): void
     {
-        [$user, $token] = $this->createUserWithRole('viewer');
+        [$user, $token] = $this->createUserWithRole('admin');
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/api/videos', [
@@ -54,6 +54,20 @@ class VideoTest extends TestCase
             'title' => 'Laravel 12 Tutorial',
             'youtube_id' => 'dQw4w9WgXcQ',
         ]);
+    }
+
+    public function test_viewer_cannot_create_video(): void
+    {
+        [$user, $token] = $this->createUserWithRole('viewer');
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/videos', [
+                'title' => 'Vidéo non autorisée',
+                'youtube_id' => 'abc123xyz',
+                'category' => 'Test',
+            ]);
+
+        $response->assertStatus(403);
     }
 
     public function test_admin_can_update_video(): void

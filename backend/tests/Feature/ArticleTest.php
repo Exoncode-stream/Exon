@@ -36,9 +36,9 @@ class ArticleTest extends TestCase
             ->assertJsonCount(2);
     }
 
-    public function test_authenticated_user_can_create_article(): void
+    public function test_authenticated_admin_can_create_article(): void
     {
-        [$user, $token] = $this->createUserWithRole('sub');
+        [$user, $token] = $this->createUserWithRole('admin');
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/api/articles', [
@@ -52,6 +52,19 @@ class ArticleTest extends TestCase
         $this->assertDatabaseHas('articles', [
             'title' => 'Mon premier article',
         ]);
+    }
+
+    public function test_viewer_cannot_create_article(): void
+    {
+        [$user, $token] = $this->createUserWithRole('viewer');
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/articles', [
+                'title' => 'Article non autorisé',
+                'content' => 'Ceci ne devrait pas être publié par un viewer.',
+            ]);
+
+        $response->assertStatus(403);
     }
 
     public function test_unauthenticated_user_cannot_create_article(): void

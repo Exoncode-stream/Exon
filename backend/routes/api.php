@@ -48,17 +48,17 @@ Route::middleware('token.auth')->group(function () {
     Route::delete('/links/{id}', [LinkController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
-    // Content Creation (any authenticated user can add)
-    Route::post('/videos', [VideoController::class, 'store']);
-    Route::post('/articles', [ArticleController::class, 'store']);
-
     // Video Management (admin or moderator)
+    Route::post('/videos', [VideoController::class, 'store'])
+        ->middleware('role:admin,moderator');
     Route::put('/videos/{id}', [VideoController::class, 'update'])
         ->middleware('role:admin,moderator');
     Route::delete('/videos/{id}', [VideoController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
     // Article Management (admin or moderator)
+    Route::post('/articles', [ArticleController::class, 'store'])
+        ->middleware('role:admin,moderator');
     Route::put('/articles/{id}', [ArticleController::class, 'update'])
         ->middleware('role:admin,moderator');
     Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])
