@@ -39,9 +39,12 @@ class AuthController extends Controller
             return response()->json(['error' => 'Identifiants invalides'], 401);
         }
 
-        // 4. Génération d'un token aléatoire brut et stockage de son empreinte SHA-256
+        // 4. Génération d'un token aléatoire brut et stockage de son empreinte SHA-256 avec date d'expiration (7 jours)
         $plainToken = Str::random(64);
-        $user->update(['token' => hash('sha256', $plainToken)]);
+        $user->update([
+            'token' => hash('sha256', $plainToken),
+            'token_expires_at' => now()->addDays(7),
+        ]);
 
         // 5. Envoi du token brut au client (SPA React)
         return response()->json([
@@ -104,7 +107,10 @@ class AuthController extends Controller
         // Récupération de l'utilisateur injecté par le middleware TokenAuth
         $user = $request->get('auth_user');
         if ($user) {
-            $user->update(['token' => null]);
+            $user->update([
+                'token' => null,
+                'token_expires_at' => null,
+            ]);
         }
 
         return response()->json(['message' => 'Déconnexion réussie.']);

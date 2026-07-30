@@ -39,6 +39,15 @@ class TokenAuth
             return response()->json(['error' => 'Non autorisé - Token invalide'], 401);
         }
 
+        // Vérification de l'expiration du token
+        if ($user->token_expires_at && $user->token_expires_at->isPast()) {
+            $user->update([
+                'token' => null,
+                'token_expires_at' => null,
+            ]);
+            return response()->json(['error' => 'Non autorisé - Token expiré'], 401);
+        }
+
         // Injection de l'utilisateur authentifié dans la requête
         $request->merge(['auth_user' => $user]);
 

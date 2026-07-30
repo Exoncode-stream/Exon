@@ -70,7 +70,7 @@ class AuthTest extends TestCase
 
     public function test_user_can_login_with_valid_credentials(): void
     {
-        User::create([
+        $user = User::create([
             'username' => 'john_doe',
             'password' => 'securepass123',
             'role' => 'viewer',
@@ -89,6 +89,9 @@ class AuthTest extends TestCase
             ]);
 
         $this->assertNotNull($response->json('token'));
+        $user->refresh();
+        $this->assertNotNull($user->token_expires_at);
+        $this->assertTrue($user->token_expires_at->isFuture());
     }
 
     public function test_login_fails_with_invalid_credentials(): void
@@ -137,6 +140,24 @@ class AuthTest extends TestCase
             ->assertJson(['error' => 'Non autorisé - Token invalide']);
     }
 
+    public function test_verify_token_fails_with_expired_token(): void
+    {
+        $plainToken = Str::random(64);
+        $user = User::create([
+            'username' => 'expireduser',
+            'password' => 'password123',
+            'token' => hash('sha256', $plainToken),
+            'token_expires_at' => now()->subDay(),
+            'role' => 'viewer',
+        ]);
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $plainToken)
+            ->getJson('/api/verify-token');
+
+        $response->assertStatus(401)
+            ->assertJson(['error' => 'Non autorisé - Token expiré']);
+    }
+
     public function test_user_can_logout_and_invalidate_token(): void
     {
         $plainToken = Str::random(64);
@@ -154,5 +175,6 @@ class AuthTest extends TestCase
 
         $user->refresh();
         $this->assertNull($user->token);
+        $this->assertNull($user->token_expires_at);
     }
 }

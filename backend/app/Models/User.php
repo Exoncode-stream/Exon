@@ -13,6 +13,7 @@ class User extends Model
         'username',
         'password',
         'token',
+        'token_expires_at',
         'role',
     ];
 
@@ -23,12 +24,14 @@ class User extends Model
     protected $hidden = [
         'password',
         'token',
+        'token_expires_at',
     ];
 
     protected function casts(): array
     {
         return [
             'password' => 'hashed',
+            'token_expires_at' => 'datetime',
             'created_at' => 'datetime',
         ];
     }

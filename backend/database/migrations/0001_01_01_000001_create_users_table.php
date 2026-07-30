@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('password');
             $table->string('token')->nullable();
+            $table->timestamp('token_expires_at')->nullable();
             $table->string('role')->default('viewer');
             $table->timestamps();
         });
