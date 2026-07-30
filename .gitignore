@@ -150,5 +150,6 @@ backend/storage/
 backend/bootstrap/cache/
 backend/.env
 backend/composer.lock
+backend/database_old/
 .vscode/
 backend_legacy/

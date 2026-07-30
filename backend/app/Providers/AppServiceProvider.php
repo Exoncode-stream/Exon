@@ -21,8 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadMigrationsFrom(app_path('Migrations'));
-
         try {
             if (!Schema::hasTable('comments') || !Schema::hasTable('likes')) {
                 Artisan::call('migrate', ['--force' => true]);
