@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('youtube_id')->unique();
             $table->string('category');
+            $table->timestamps();
         });
     }
 

@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Creating Learn Code website with Next.js',
                 'youtube_id' => 'https://www.youtube.com/watch?v=ILW91gXl30Y',
                 'category' => 'Web development',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
 
@@ -47,10 +49,14 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Introduction to Next.js',
                 'content' => 'Next.js is a React framework that gives you building blocks to create web applications...',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'title' => 'Understanding Docker',
                 'content' => 'Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers...',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
     }
