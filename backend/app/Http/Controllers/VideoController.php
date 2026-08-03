@@ -37,9 +37,9 @@ class VideoController extends Controller
         ]);
 
         $video = Video::create([
-            'title' => trim(htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8')),
-            'youtube_id' => trim(htmlspecialchars($data['youtube_id'], ENT_QUOTES, 'UTF-8')),
-            'category' => trim(htmlspecialchars($data['category'], ENT_QUOTES, 'UTF-8')),
+            'title' => trim($data['title']),
+            'youtube_id' => trim($data['youtube_id']),
+            'category' => trim($data['category']),
         ]);
 
         return response()->json([
@@ -72,9 +72,9 @@ class VideoController extends Controller
         ]);
 
         $video->update([
-            'title' => trim(htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8')),
-            'youtube_id' => trim(htmlspecialchars($data['youtube_id'], ENT_QUOTES, 'UTF-8')),
-            'category' => trim(htmlspecialchars($data['category'], ENT_QUOTES, 'UTF-8')),
+            'title' => trim($data['title']),
+            'youtube_id' => trim($data['youtube_id']),
+            'category' => trim($data['category']),
         ]);
 
         return response()->json([

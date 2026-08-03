@@ -69,7 +69,7 @@ class CommentController extends Controller
 
         $comment = $commentable->comments()->create([
             'user_id' => $user->id,
-            'content' => trim(htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8')),
+            'content' => trim($data['content']),
         ]);
 
         $comment->load('user:id,username,role');

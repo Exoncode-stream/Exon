@@ -38,8 +38,8 @@ class ArticleController extends Controller
 
         // Nettoyage et enregistrement de l'article
         $article = Article::create([
-            'title' => trim(htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8')),
-            'content' => trim(htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8')),
+            'title' => trim($data['title']),
+            'content' => trim($data['content']),
         ]);
 
         return response()->json([
@@ -70,8 +70,8 @@ class ArticleController extends Controller
         ]);
 
         $article->update([
-            'title' => trim(htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8')),
-            'content' => trim(htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8')),
+            'title' => trim($data['title']),
+            'content' => trim($data['content']),
         ]);
 
         return response()->json([

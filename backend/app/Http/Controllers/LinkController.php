@@ -37,7 +37,7 @@ class LinkController extends Controller
         ]);
 
         $link = Link::create([
-            'name' => trim(htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8')),
+            'name' => trim($data['name']),
             'url' => trim($data['url']),
         ]);
 
@@ -70,7 +70,7 @@ class LinkController extends Controller
         ]);
 
         $link->update([
-            'name' => trim(htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8')),
+            'name' => trim($data['name']),
             'url' => trim($data['url']),
         ]);
 

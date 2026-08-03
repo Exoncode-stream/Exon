@@ -38,12 +38,7 @@ export default function ArticleModal({ article, onClose }) {
 
   if (!article) return null;
 
-  const rawContent = (article.content || '')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;/g, "'");
+  const rawContent = article.content || '';
 
   async function handleToggleLike() {
     if (!user) {
