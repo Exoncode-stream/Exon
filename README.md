@@ -1,15 +1,15 @@
-# Exon — Hub Communautaire Full-Stack ("Terminal Noir")
+# Exon — Hub Communautaire Full-Stack
 
-**Exon** est une plateforme web de type hub communautaire centralisant du contenu multimédia (vidéos YouTube, articles en Markdown et liens sociaux/externes). Le projet se distingue par une charte graphique rétro-tech baptisée **« Terminal Noir »**, inspirée des interfaces en ligne de commande.
+**Exon** est une plateforme web de type hub communautaire centralisant du contenu multimédia (vidéos YouTube, articles en Markdown et liens sociaux/externes).
 
-L'application repose sur une **architecture découplée** associant un Single Page Application (SPA) réactive en **React 19 (Vite)** et une API RESTful haute performance construite sous **Laravel 12 (SQLite)**.
+L'application repose sur une **architecture découplée** associant une Single Page Application (SPA) réactive en **React 19 (Vite)** et une API RESTful haute performance construite sous **Laravel 12 (SQLite)**.
 
 ---
 
 ## 🚀 Fonctionnalités Principales
 
 * **Hub Multimédia Réactif** : Navigation fluide avec liens sous forme de puces (*pills*), grille de cartes vidéo YouTube et aperçus d'articles.
-* **Barre d'Outils de Recherche et Filtrage** : Recherche textuelle *"grep"* en temps réel sur les titres/contenus et filtrage dynamique par catégories de vidéos.
+* **Barre d'Outils de Recherche et Filtrage** : Recherche textuelle en temps réel sur les titres/contenus et filtrage dynamique par catégories de vidéos.
 * **Lecteur d'Articles Markdown** : Fenêtre modale native (`<dialog>`) intégrant le rendu Markdown (`react-markdown`) avec gestion des commentaires et des likes.
 * **Système d'Interactions Polymorphique** : Modules de commentaires et de likes/upvotes rattachés indifféremment aux articles ou aux vidéos.
 * **Authentification & Gestion de Profil** : Connexion/Inscription sécurisée, session par cookies `HttpOnly` et jetons Bearer, espace profil avec statistiques d'activité (nombre de commentaires et likes) et modification sécurisée du mot de passe.
@@ -23,7 +23,7 @@ L'application repose sur une **architecture découplée** associant un Single Pa
 * **React 19** & **Vite 6**
 * **React Router DOM v7** (Routage SPA et `ProtectedRoute`)
 * **React Markdown v10** (Rendu du contenu d'articles)
-* **Vanilla CSS** (Design System personnalisé "Terminal Noir", animations CSS, CSS Grid/Flexbox)
+* **Vanilla CSS** (Design System personnalisé, responsive layout, animations CSS, CSS Grid/Flexbox)
 * **Vitest** & **React Testing Library** (Tests unitaires et d'intégration frontend)
 
 ### Backend
@@ -163,9 +163,3 @@ Exécuter la suite de tests composants et contextes côté frontend (8 tests) :
 ```bash
 cd frontend && npm test
 ```
-
----
-
-## 📄 Licence
-
-Ce projet est sous licence **MIT**. Libre d'utilisation et de modification.
