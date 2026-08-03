@@ -46,14 +46,27 @@ class AuthController extends Controller
             'token_expires_at' => now()->addDays(7),
         ]);
 
-        // 5. Envoi du token brut au client (SPA React)
+        // 5. Création du cookie HttpOnly sécurisé (7 jours)
+        $cookie = cookie(
+            'exon_token',
+            $plainToken,
+            60 * 24 * 7,
+            '/',
+            null,
+            $request->isSecure(),
+            true, // httpOnly
+            false,
+            'lax'
+        );
+
+        // 6. Envoi du token et du cookie HttpOnly au client
         return response()->json([
             'success' => true,
             'token' => $plainToken,
             'message' => 'Connexion réussie !',
             'username' => $user->username,
             'role' => $user->role,
-        ]);
+        ])->withCookie($cookie);
     }
 
     /**
@@ -100,7 +113,7 @@ class AuthController extends Controller
 
     /**
      * POST /api/logout
-     * Déconnecte l'utilisateur en effaçant son token de session côté serveur.
+     * Déconnecte l'utilisateur en effaçant son token de session côté serveur et en supprimant le cookie HttpOnly.
      */
     public function logout(Request $request): JsonResponse
     {
@@ -113,7 +126,9 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Déconnexion réussie.']);
+        $forgetCookie = cookie()->forget('exon_token');
+
+        return response()->json(['message' => 'Déconnexion réussie.'])->withCookie($forgetCookie);
     }
 
     /**

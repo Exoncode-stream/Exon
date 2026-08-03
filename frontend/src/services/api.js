@@ -5,13 +5,6 @@ function getAuthHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-function jsonHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    ...getAuthHeaders(),
-  };
-}
-
 async function handleResponse(response) {
   let data;
   try {
@@ -25,207 +18,176 @@ async function handleResponse(response) {
   return data;
 }
 
+async function customFetch(endpoint, options = {}) {
+  const headers = {
+    ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+    ...getAuthHeaders(),
+    ...options.headers,
+  };
+
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    credentials: 'include',
+    ...options,
+    headers,
+  });
+
+  return handleResponse(res);
+}
+
 /* ─── Public ─── */
 
 export async function fetchHub() {
-  const res = await fetch(`${API_BASE}/hub`);
-  return handleResponse(res);
+  return customFetch('/hub');
 }
 
 export async function login(username, password) {
-  const res = await fetch(`${API_BASE}/login`, {
+  return customFetch('/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  return handleResponse(res);
 }
 
 export async function register(username, password) {
-  const res = await fetch(`${API_BASE}/register`, {
+  return customFetch('/register', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  return handleResponse(res);
 }
 
 /* ─── Authenticated ─── */
 
 export async function verifyToken() {
-  const res = await fetch(`${API_BASE}/verify-token`, {
-    headers: getAuthHeaders(),
-  });
-  return handleResponse(res);
+  return customFetch('/verify-token');
 }
 
 export async function logoutApi() {
-  const res = await fetch(`${API_BASE}/logout`, {
+  return customFetch('/logout', {
     method: 'POST',
-    headers: jsonHeaders(),
   });
-  return handleResponse(res);
 }
 
 export async function fetchVideos() {
-  const res = await fetch(`${API_BASE}/videos`);
-  return handleResponse(res);
+  return customFetch('/videos');
 }
 
 export async function addVideo(title, youtube_id, category) {
-  const res = await fetch(`${API_BASE}/videos`, {
+  return customFetch('/videos', {
     method: 'POST',
-    headers: jsonHeaders(),
     body: JSON.stringify({ title, youtube_id, category }),
   });
-  return handleResponse(res);
 }
 
 export async function updateVideo(id, title, youtube_id, category) {
-  const res = await fetch(`${API_BASE}/videos/${id}`, {
+  return customFetch(`/videos/${id}`, {
     method: 'PUT',
-    headers: jsonHeaders(),
     body: JSON.stringify({ title, youtube_id, category }),
   });
-  return handleResponse(res);
 }
 
 export async function deleteVideo(id) {
-  const res = await fetch(`${API_BASE}/videos/${id}`, {
+  return customFetch(`/videos/${id}`, {
     method: 'DELETE',
-    headers: jsonHeaders(),
   });
-  return handleResponse(res);
 }
 
 export async function fetchArticles() {
-  const res = await fetch(`${API_BASE}/articles`);
-  return handleResponse(res);
+  return customFetch('/articles');
 }
 
 export async function addArticle(title, content) {
-  const res = await fetch(`${API_BASE}/articles`, {
+  return customFetch('/articles', {
     method: 'POST',
-    headers: jsonHeaders(),
     body: JSON.stringify({ title, content }),
   });
-  return handleResponse(res);
 }
 
 export async function updateArticle(id, title, content) {
-  const res = await fetch(`${API_BASE}/articles/${id}`, {
+  return customFetch(`/articles/${id}`, {
     method: 'PUT',
-    headers: jsonHeaders(),
     body: JSON.stringify({ title, content }),
   });
-  return handleResponse(res);
 }
 
 export async function deleteArticle(id) {
-  const res = await fetch(`${API_BASE}/articles/${id}`, {
+  return customFetch(`/articles/${id}`, {
     method: 'DELETE',
-    headers: jsonHeaders(),
   });
-  return handleResponse(res);
 }
 
 export async function fetchLinks() {
-  const res = await fetch(`${API_BASE}/links`);
-  return handleResponse(res);
+  return customFetch('/links');
 }
 
 export async function addLink(name, url) {
-  const res = await fetch(`${API_BASE}/links`, {
+  return customFetch('/links', {
     method: 'POST',
-    headers: jsonHeaders(),
     body: JSON.stringify({ name, url }),
   });
-  return handleResponse(res);
 }
 
 export async function updateLink(id, name, url) {
-  const res = await fetch(`${API_BASE}/links/${id}`, {
+  return customFetch(`/links/${id}`, {
     method: 'PUT',
-    headers: jsonHeaders(),
     body: JSON.stringify({ name, url }),
   });
-  return handleResponse(res);
 }
 
 export async function deleteLink(id) {
-  const res = await fetch(`${API_BASE}/links/${id}`, {
+  return customFetch(`/links/${id}`, {
     method: 'DELETE',
-    headers: jsonHeaders(),
   });
-  return handleResponse(res);
 }
 
 export async function fetchUsers() {
-  const res = await fetch(`${API_BASE}/users`, {
-    headers: getAuthHeaders(),
-  });
-  return handleResponse(res);
+  return customFetch('/users');
 }
 
 export async function updateUserRole(userId, role) {
-  const res = await fetch(`${API_BASE}/users/${userId}/role`, {
+  return customFetch(`/users/${userId}/role`, {
     method: 'PUT',
-    headers: jsonHeaders(),
     body: JSON.stringify({ role }),
   });
-  return handleResponse(res);
 }
 
 /* ─── Comments & Likes ─── */
 
 export async function fetchComments(type, id) {
-  const res = await fetch(`${API_BASE}/${type}/${id}/comments`);
-  return handleResponse(res);
+  return customFetch(`/${type}/${id}/comments`);
 }
 
 export async function addComment(type, id, content) {
-  const res = await fetch(`${API_BASE}/${type}/${id}/comments`, {
+  return customFetch(`/${type}/${id}/comments`, {
     method: 'POST',
-    headers: jsonHeaders(),
     body: JSON.stringify({ content }),
   });
-  return handleResponse(res);
 }
 
 export async function deleteComment(id) {
-  const res = await fetch(`${API_BASE}/comments/${id}`, {
+  return customFetch(`/comments/${id}`, {
     method: 'DELETE',
-    headers: jsonHeaders(),
   });
-  return handleResponse(res);
 }
 
 export async function toggleLike(type, id) {
-  const res = await fetch(`${API_BASE}/${type}/${id}/like`, {
+  return customFetch(`/${type}/${id}/like`, {
     method: 'POST',
-    headers: jsonHeaders(),
   });
-  return handleResponse(res);
 }
 
 /* ─── Profile & Account ─── */
 
 export async function fetchProfile() {
-  const res = await fetch(`${API_BASE}/profile`, {
-    headers: getAuthHeaders(),
-  });
-  return handleResponse(res);
+  return customFetch('/profile');
 }
 
 export async function changePassword(currentPassword, newPassword, newPasswordConfirmation) {
-  const res = await fetch(`${API_BASE}/profile/password`, {
+  return customFetch('/profile/password', {
     method: 'PUT',
-    headers: jsonHeaders(),
     body: JSON.stringify({
       current_password: currentPassword,
       new_password: newPassword,
       new_password_confirmation: newPasswordConfirmation,
     }),
   });
-  return handleResponse(res);
 }
+

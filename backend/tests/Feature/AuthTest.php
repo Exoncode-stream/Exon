@@ -86,7 +86,8 @@ class AuthTest extends TestCase
                 'success' => true,
                 'username' => 'john_doe',
                 'role' => 'viewer',
-            ]);
+            ])
+            ->assertCookie('exon_token');
 
         $this->assertNotNull($response->json('token'));
         $user->refresh();
@@ -128,6 +129,26 @@ class AuthTest extends TestCase
                 'valid' => true,
                 'username' => 'activeuser',
                 'role' => 'admin',
+            ]);
+    }
+
+    public function test_user_can_verify_valid_token_via_cookie(): void
+    {
+        $plainToken = Str::random(64);
+        $user = User::create([
+            'username' => 'cookieuser',
+            'password' => 'password123',
+            'token' => hash('sha256', $plainToken),
+            'role' => 'moderator',
+        ]);
+
+        $response = $this->call('GET', '/api/verify-token', [], ['exon_token' => $plainToken]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'valid' => true,
+                'username' => 'cookieuser',
+                'role' => 'moderator',
             ]);
     }
 
@@ -178,3 +199,4 @@ class AuthTest extends TestCase
         $this->assertNull($user->token_expires_at);
     }
 }
+

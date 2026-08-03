@@ -22,9 +22,9 @@ class TokenAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $rawToken = $request->bearerToken();
+        $rawToken = $request->bearerToken() ?? $request->cookie('exon_token');
 
-        // Si aucun token n'est présent dans le header
+        // Si aucun token n'est présent dans le header ni dans le cookie
         if (!$rawToken) {
             return response()->json(['error' => 'Non autorisé - Token manquant'], 401);
         }
