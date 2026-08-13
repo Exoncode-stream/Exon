@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { isStaff } from "../utils/auth";
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -30,7 +31,7 @@ export default function Navbar() {
                   {user.username}
                 </Link>
               </li>
-              {(user.role === "admin" || user.role === "moderator") && (
+              {isStaff(user) && (
                 <li>
                   <Link to="/admin" className={isActive("/admin")}>
                     Admin

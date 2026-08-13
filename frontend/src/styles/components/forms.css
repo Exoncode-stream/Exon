@@ -1,0 +1,94 @@
+/* ─── Form Controls & Messages ─── */
+.form-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.form-page h1 {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.75rem;
+}
+
+.form-page h1::before { content: '> '; color: var(--accent); }
+
+.form-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+}
+
+.form-group {
+  margin-bottom: 1.15rem;
+  border: none;
+  padding: 0;
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: var(--transition);
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.form-message {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  margin-top: 1rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+}
+
+.form-message.success {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: rgba(57, 255, 136, 0.2);
+}
+
+.form-message.error {
+  color: var(--danger);
+  background: var(--danger-dim);
+  border-color: rgba(248, 81, 73, 0.2);
+}
+
+.form-alt {
+  margin-top: 1.25rem;
+  text-align: center;
+}

@@ -1,40 +1,26 @@
 import { useAuth } from "../context/AuthContext";
-import { deleteVideo as apiDeleteVideo, toggleLike as apiToggleLike } from "../services/api";
+import { deleteVideo as apiDeleteVideo } from "../services/api";
 import { useState } from "react";
+import { isStaff } from "../utils/auth";
+import { useLike } from "../hooks/useLike";
+import { useConfirmDelete } from "../hooks/useConfirmDelete";
 
 export default function VideoCard({ video, onDeleted }) {
   const { user } = useAuth();
   const [deleting, setDeleting] = useState(false);
-  const [likesCount, setLikesCount] = useState(video.likes_count || 0);
-  const [liked, setLiked] = useState(false);
+  const { liked, likesCount, toggleLike } = useLike('videos', video.id, false, video.likes_count || 0);
+  const confirmDelete = useConfirmDelete();
 
-  const canDelete = user && (user.role === "admin" || user.role === "moderator");
+  const canDelete = isStaff(user);
 
   async function handleDelete() {
-    if (!window.confirm("Supprimer cette vidéo ?")) return;
     setDeleting(true);
-    try {
-      await apiDeleteVideo(video.id);
-      onDeleted?.(video.id);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setDeleting(false);
-    }
-  }
-
-  async function handleLike() {
-    if (!user) {
-      alert("Vous devez être connecté pour liker cette vidéo.");
-      return;
-    }
-    try {
-      const res = await apiToggleLike('videos', video.id);
-      setLiked(res.liked);
-      setLikesCount(res.likes_count);
-    } catch (err) {
-      alert(err.message);
-    }
+    await confirmDelete(
+      "Supprimer cette vidéo ?",
+      () => apiDeleteVideo(video.id),
+      () => onDeleted?.(video.id)
+    );
+    setDeleting(false);
   }
 
   /* Extract YouTube ID from various URL formats */
@@ -63,7 +49,7 @@ export default function VideoCard({ video, onDeleted }) {
         <button
           type="button"
           className={`btn-like ${liked ? 'liked' : ''}`}
-          onClick={handleLike}
+          onClick={toggleLike}
           id={`like-video-${video.id}`}
         >
           ♥ {likesCount}

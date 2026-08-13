@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { fetchProfile, changePassword } from "../services/api";
+import { isStaff } from "../utils/auth";
+import { formatDate } from "../utils/formatters";
 
 /**
  * Profile Page Component
@@ -95,7 +97,7 @@ export default function Profile() {
           <>
             <dt className="profile-label">Membre depuis</dt>
             <dd className="profile-value" id="profile-created-at">
-              {new Date(profileData.created_at).toLocaleDateString()}
+              {formatDate(profileData.created_at)}
             </dd>
           </>
         )}
@@ -174,7 +176,7 @@ export default function Profile() {
         <Link to="/" className="pill-link">
           Retour au Hub
         </Link>
-        {(user.role === "admin" || user.role === "moderator") && (
+        {isStaff(user) && (
           <Link to="/admin" className="pill-link">
             Panneau Admin
           </Link>
