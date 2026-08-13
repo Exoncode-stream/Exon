@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VideoRequest;
 use App\Models\Video;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Controller gérant les vidéos YouTube présentées sur la plateforme.
@@ -24,23 +24,9 @@ class VideoController extends Controller
      * POST /api/videos
      * Ajoute une nouvelle vidéo. Accessible à tout utilisateur authentifié.
      */
-    public function store(Request $request): JsonResponse
+    public function store(VideoRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'youtube_id' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-        ], [
-            'title.required' => 'Le titre est requis.',
-            'youtube_id.required' => 'L\'identifiant ou l\'URL YouTube est requis.',
-            'category.required' => 'La catégorie est requise.',
-        ]);
-
-        $video = Video::create([
-            'title' => trim($data['title']),
-            'youtube_id' => trim($data['youtube_id']),
-            'category' => trim($data['category']),
-        ]);
+        $video = Video::create($request->validated());
 
         return response()->json([
             'message' => 'Vidéo ajoutée avec succès !',
@@ -49,33 +35,12 @@ class VideoController extends Controller
     }
 
     /**
-     * PUT /api/videos/{id}
+     * PUT /api/videos/{video}
      * Met à jour les informations d'une vidéo (titre, id youtube, catégorie).
-     * Requis : Rôle administrateur ou modérateur.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(VideoRequest $request, Video $video): JsonResponse
     {
-        $video = Video::find($id);
-
-        if (!$video) {
-            return response()->json(['error' => 'Vidéo non trouvée'], 404);
-        }
-
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'youtube_id' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-        ], [
-            'title.required' => 'Le titre est requis.',
-            'youtube_id.required' => 'L\'identifiant YouTube est requis.',
-            'category.required' => 'La catégorie est requise.',
-        ]);
-
-        $video->update([
-            'title' => trim($data['title']),
-            'youtube_id' => trim($data['youtube_id']),
-            'category' => trim($data['category']),
-        ]);
+        $video->update($request->validated());
 
         return response()->json([
             'message' => 'Vidéo mise à jour avec succès !',
@@ -84,17 +49,11 @@ class VideoController extends Controller
     }
 
     /**
-     * DELETE /api/videos/{id}
+     * DELETE /api/videos/{video}
      * Supprime une vidéo. Requis : Rôle administrateur ou modérateur.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Video $video): JsonResponse
     {
-        $video = Video::find($id);
-
-        if (!$video) {
-            return response()->json(['error' => 'Vidéo non trouvée'], 404);
-        }
-
         $video->delete();
 
         return response()->json(['message' => 'Vidéo supprimée avec succès']);

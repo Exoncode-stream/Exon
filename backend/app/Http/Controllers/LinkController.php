@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LinkRequest;
 use App\Models\Link;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Controller gérant les liens externes affichés dans la barre de navigation du Hub.
@@ -23,23 +23,10 @@ class LinkController extends Controller
     /**
      * POST /api/links
      * Ajoute un nouveau lien externe.
-     * Requis : Rôle administrateur ou modérateur.
      */
-    public function store(Request $request): JsonResponse
+    public function store(LinkRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'url' => 'required|url|max:255',
-        ], [
-            'name.required' => 'Le nom du lien est requis.',
-            'url.required' => 'L\'URL du lien est requise.',
-            'url.url' => 'L\'URL fournie doit être une adresse valide (ex: https://example.com).',
-        ]);
-
-        $link = Link::create([
-            'name' => trim($data['name']),
-            'url' => trim($data['url']),
-        ]);
+        $link = Link::create($request->validated());
 
         return response()->json([
             'message' => 'Lien ajouté avec succès !',
@@ -48,31 +35,12 @@ class LinkController extends Controller
     }
 
     /**
-     * PUT /api/links/{id}
+     * PUT /api/links/{link}
      * Met à jour un lien existant.
-     * Requis : Rôle administrateur ou modérateur.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(LinkRequest $request, Link $link): JsonResponse
     {
-        $link = Link::find($id);
-
-        if (!$link) {
-            return response()->json(['error' => 'Lien non trouvé'], 404);
-        }
-
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'url' => 'required|url|max:255',
-        ], [
-            'name.required' => 'Le nom du lien est requis.',
-            'url.required' => 'L\'URL du lien est requise.',
-            'url.url' => 'L\'URL fournie doit être une adresse valide.',
-        ]);
-
-        $link->update([
-            'name' => trim($data['name']),
-            'url' => trim($data['url']),
-        ]);
+        $link->update($request->validated());
 
         return response()->json([
             'message' => 'Lien mis à jour avec succès !',
@@ -81,18 +49,11 @@ class LinkController extends Controller
     }
 
     /**
-     * DELETE /api/links/{id}
+     * DELETE /api/links/{link}
      * Supprime un lien externe.
-     * Requis : Rôle administrateur ou modérateur.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Link $link): JsonResponse
     {
-        $link = Link::find($id);
-
-        if (!$link) {
-            return response()->json(['error' => 'Lien non trouvé'], 404);
-        }
-
         $link->delete();
 
         return response()->json(['message' => 'Lien supprimé avec succès !']);

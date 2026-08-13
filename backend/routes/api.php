@@ -37,31 +37,31 @@ Route::middleware('token.auth')->group(function () {
 
     // Comments & Likes (all authenticated users)
     Route::post('/{type}/{id}/comments', [CommentController::class, 'store'])->where('type', 'articles|videos');
-    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
     Route::post('/{type}/{id}/like', [LikeController::class, 'toggle'])->where('type', 'articles|videos');
 
     // Link Management (admin or moderator)
     Route::post('/links', [LinkController::class, 'store'])
         ->middleware('role:admin,moderator');
-    Route::put('/links/{id}', [LinkController::class, 'update'])
+    Route::put('/links/{link}', [LinkController::class, 'update'])
         ->middleware('role:admin,moderator');
-    Route::delete('/links/{id}', [LinkController::class, 'destroy'])
+    Route::delete('/links/{link}', [LinkController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
     // Video Management (admin or moderator)
     Route::post('/videos', [VideoController::class, 'store'])
         ->middleware('role:admin,moderator');
-    Route::put('/videos/{id}', [VideoController::class, 'update'])
+    Route::put('/videos/{video}', [VideoController::class, 'update'])
         ->middleware('role:admin,moderator');
-    Route::delete('/videos/{id}', [VideoController::class, 'destroy'])
+    Route::delete('/videos/{video}', [VideoController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
     // Article Management (admin or moderator)
     Route::post('/articles', [ArticleController::class, 'store'])
         ->middleware('role:admin,moderator');
-    Route::put('/articles/{id}', [ArticleController::class, 'update'])
+    Route::put('/articles/{article}', [ArticleController::class, 'update'])
         ->middleware('role:admin,moderator');
-    Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
         ->middleware('role:admin,moderator');
 
     // User Management (admin only)
