@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../context/AuthContext';
-import { fetchComments, addComment, deleteComment, toggleLike } from '../services/api';
+import { fetchComments, addComment, deleteComment } from '../services/api';
+import { isStaff } from '../utils/auth';
+import { formatDate } from '../utils/formatters';
+import { useLike } from '../hooks/useLike';
+import { useConfirmDelete } from '../hooks/useConfirmDelete';
 
 export default function ArticleModal({ article, onClose }) {
   const dialogRef = useRef(null);
@@ -10,9 +14,15 @@ export default function ArticleModal({ article, onClose }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [commentError, setCommentError] = useState("");
-  const [likesCount, setLikesCount] = useState(article?.likes_count || 0);
-  const [liked, setLiked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { liked, likesCount, toggleLike, setLiked, setLikesCount } = useLike(
+    'articles',
+    article?.id,
+    false,
+    article?.likes_count || 0
+  );
+  const confirmDelete = useConfirmDelete();
 
   const loadComments = useCallback(async () => {
     if (!article?.id) return;
@@ -34,25 +44,11 @@ export default function ArticleModal({ article, onClose }) {
     } else {
       dialog?.close();
     }
-  }, [article, loadComments]);
+  }, [article, loadComments, setLikesCount, setLiked]);
 
   if (!article) return null;
 
   const rawContent = article.content || '';
-
-  async function handleToggleLike() {
-    if (!user) {
-      alert("Vous devez être connecté pour liker cet article.");
-      return;
-    }
-    try {
-      const res = await toggleLike('articles', article.id);
-      setLiked(res.liked);
-      setLikesCount(res.likes_count);
-    } catch (err) {
-      alert(err.message);
-    }
-  }
 
   async function handleAddComment(e) {
     e.preventDefault();
@@ -73,14 +69,11 @@ export default function ArticleModal({ article, onClose }) {
   }
 
   async function handleDeleteComment(id) {
-    if (!window.confirm("Voulez-vous supprimer ce commentaire ?")) return;
-
-    try {
-      await deleteComment(id);
-      setComments((prev) => prev.filter((c) => c.id !== id));
-    } catch (err) {
-      alert(err.message);
-    }
+    await confirmDelete(
+      "Voulez-vous supprimer ce commentaire ?",
+      () => deleteComment(id),
+      () => setComments((prev) => prev.filter((c) => c.id !== id))
+    );
   }
 
   return (
@@ -102,7 +95,7 @@ export default function ArticleModal({ article, onClose }) {
           <button
             type="button"
             className={`btn-like ${liked ? 'liked' : ''}`}
-            onClick={handleToggleLike}
+            onClick={toggleLike}
             id="like-article-btn"
           >
             ♥ {likesCount} {likesCount === 1 ? 'Like' : 'Likes'}
@@ -135,18 +128,18 @@ export default function ArticleModal({ article, onClose }) {
           <ul className="comments-list" id="comments-list">
             {comments.map((comment) => {
               const isOwner = user && user.username === comment.user?.username;
-              const isStaff = user && ['admin', 'moderator'].includes(user.role);
+              const hasStaffPrivileges = isStaff(user);
 
               return (
                 <li key={comment.id} className="comment-item">
                   <div className="comment-header">
                     <span className="comment-author">@{comment.user?.username || 'Anonyme'}</span>
                     <time className="comment-date">
-                      {comment.created_at ? new Date(comment.created_at).toLocaleDateString() : ''}
+                      {formatDate(comment.created_at)}
                     </time>
                   </div>
                   <p className="comment-text">{comment.content}</p>
-                  {(isOwner || isStaff) && (
+                  {(isOwner || hasStaffPrivileges) && (
                     <button
                       type="button"
                       className="btn-delete-comment"

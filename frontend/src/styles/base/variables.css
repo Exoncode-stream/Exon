@@ -1,0 +1,31 @@
+:root {
+  --bg-deep: #0a0e14;
+  --bg-surface: #12171f;
+  --bg-elevated: #1a2030;
+  --bg-glass: rgba(18, 23, 31, 0.75);
+  --border: rgba(56, 68, 90, 0.45);
+  --border-hover: rgba(56, 68, 90, 0.8);
+
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a94a6;
+  --text-muted: #4a5568;
+
+  --accent: #39ff88;
+  --accent-dim: rgba(57, 255, 136, 0.12);
+  --accent-glow: rgba(57, 255, 136, 0.35);
+
+  --danger: #f85149;
+  --danger-dim: rgba(248, 81, 73, 0.12);
+  --danger-glow: rgba(248, 81, 73, 0.35);
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 100px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.25s var(--ease);
+}
