@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Controller gérant les opérations CRUD sur les articles du hub.
@@ -23,24 +23,10 @@ class ArticleController extends Controller
     /**
      * POST /api/articles
      * Ajoute un nouvel article en base de données.
-     * Accessible à tout utilisateur authentifié.
      */
-    public function store(Request $request): JsonResponse
+    public function store(ArticleRequest $request): JsonResponse
     {
-        // Validation des entrées
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ], [
-            'title.required' => 'Le titre est requis.',
-            'content.required' => 'Le contenu est requis.',
-        ]);
-
-        // Nettoyage et enregistrement de l'article
-        $article = Article::create([
-            'title' => trim($data['title']),
-            'content' => trim($data['content']),
-        ]);
+        $article = Article::create($request->validated());
 
         return response()->json([
             'message' => 'Article ajouté avec succès !',
@@ -49,30 +35,12 @@ class ArticleController extends Controller
     }
 
     /**
-     * PUT /api/articles/{id}
+     * PUT /api/articles/{article}
      * Mettre à jour un article existant.
-     * Accessible uniquement aux administrateurs et modérateurs.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(ArticleRequest $request, Article $article): JsonResponse
     {
-        $article = Article::find($id);
-
-        if (!$article) {
-            return response()->json(['error' => 'Article non trouvé'], 404);
-        }
-
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ], [
-            'title.required' => 'Le titre est requis.',
-            'content.required' => 'Le contenu est requis.',
-        ]);
-
-        $article->update([
-            'title' => trim($data['title']),
-            'content' => trim($data['content']),
-        ]);
+        $article->update($request->validated());
 
         return response()->json([
             'message' => 'Article mis à jour avec succès !',
@@ -81,18 +49,11 @@ class ArticleController extends Controller
     }
 
     /**
-     * DELETE /api/articles/{id}
+     * DELETE /api/articles/{article}
      * Supprime un article.
-     * Accessible uniquement aux administrateurs et modérateurs.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Article $article): JsonResponse
     {
-        $article = Article::find($id);
-
-        if (!$article) {
-            return response()->json(['error' => 'Article non trouvé'], 404);
-        }
-
         $article->delete();
 
         return response()->json(['message' => 'Article supprimé avec succès !']);

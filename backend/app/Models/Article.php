@@ -2,26 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasCommentsAndLikes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Article extends Model
 {
-    use HasFactory;
+    use HasFactory, HasCommentsAndLikes;
 
     protected $fillable = [
         'title',
         'content',
     ];
-
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable')->latest();
-    }
-
-    public function likes(): MorphMany
-    {
-        return $this->morphMany(Like::class, 'likeable');
-    }
 }

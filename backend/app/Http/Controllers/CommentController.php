@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
-use App\Models\Video;
+use App\Services\PolymorphicResolver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,25 +14,12 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     /**
-     * Helper pour déterminer le modèle cible (Article ou Video).
-     */
-    private function resolveCommentable(string $type, int $id)
-    {
-        if ($type === 'articles') {
-            return Article::find($id);
-        } elseif ($type === 'videos') {
-            return Video::find($id);
-        }
-        return null;
-    }
-
-    /**
      * GET /api/{type}/{id}/comments
      * Récupère la liste des commentaires pour un article ou une vidéo.
      */
     public function index(string $type, int $id): JsonResponse
     {
-        $commentable = $this->resolveCommentable($type, $id);
+        $commentable = PolymorphicResolver::resolve($type, $id);
 
         if (!$commentable) {
             return response()->json(['error' => 'Contenu non trouvé'], 404);
@@ -40,7 +27,6 @@ class CommentController extends Controller
 
         $comments = $commentable->comments()
             ->with('user:id,username,role')
-            ->latest()
             ->get();
 
         return response()->json(['comments' => $comments]);
@@ -50,9 +36,9 @@ class CommentController extends Controller
      * POST /api/{type}/{id}/comments
      * Ajoute un commentaire sous un article ou une vidéo. Requis : Authentification.
      */
-    public function store(Request $request, string $type, int $id): JsonResponse
+    public function store(CommentRequest $request, string $type, int $id): JsonResponse
     {
-        $commentable = $this->resolveCommentable($type, $id);
+        $commentable = PolymorphicResolver::resolve($type, $id);
 
         if (!$commentable) {
             return response()->json(['error' => 'Contenu non trouvé'], 404);
@@ -60,16 +46,9 @@ class CommentController extends Controller
 
         $user = $request->get('auth_user');
 
-        $data = $request->validate([
-            'content' => 'required|string|max:1000',
-        ], [
-            'content.required' => 'Le commentaire ne peut pas être vide.',
-            'content.max' => 'Le commentaire ne peut pas dépasser 1000 caractères.',
-        ]);
-
         $comment = $commentable->comments()->create([
             'user_id' => $user->id,
-            'content' => trim($data['content']),
+            'content' => $request->validated('content'),
         ]);
 
         $comment->load('user:id,username,role');
@@ -81,23 +60,17 @@ class CommentController extends Controller
     }
 
     /**
-     * DELETE /api/comments/{id}
+     * DELETE /api/comments/{comment}
      * Supprime un commentaire.
      * Requis : Être l'auteur du commentaire OU être modérateur / administrateur.
      */
-    public function destroy(Request $request, int $id): JsonResponse
+    public function destroy(Request $request, Comment $comment): JsonResponse
     {
-        $comment = Comment::find($id);
-
-        if (!$comment) {
-            return response()->json(['error' => 'Commentaire non trouvé'], 404);
-        }
-
         $user = $request->get('auth_user');
 
         // Vérification des droits : Auteur du commentaire OU admin/moderator
         $isAuthor = $user->id === $comment->user_id;
-        $isStaff = in_array($user->role, ['admin', 'moderator']);
+        $isStaff = $user->isStaff();
 
         if (!$isAuthor && !$isStaff) {
             return response()->json(['error' => 'Accès interdit - Vous ne pouvez pas supprimer ce commentaire'], 403);
