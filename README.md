@@ -16,14 +16,17 @@ Below are interface captures demonstrating the primary user flows across the Exo
 ### 2. User Authentication & Login Flow
 ![User Authentication](assets/Screenshot_20260815_145952.png)
 
-### 3. Markdown Article Reader Modal
-![Markdown Article Reader](assets/Screenshot_20260815_150005.png)
+### 3. User Profile & Account Space
+![User Profile Space](assets/Screenshot_20260815_150005.png)
+*Shows user profile information (username, assigned role, registration date, created comments count, liked contents count), password update form, logout option, hub return shortcut, and administrator panel access button.*
 
-### 4. Interactive Comments & Engagement
-![Interactive Comments](assets/Screenshot_20260815_150016.png)
+### 4. Staff Admin Panel — Links & Videos Management
+![Staff Admin Panel Links and Videos](assets/Screenshot_20260815_150016.png)
+*First section of the staff administration panel showing external social link management (GitHub, Twitter, Discord...) and YouTube video entry CRUD management.*
 
-### 5. Staff Administration & Role Management Dashboard
-![Staff Administration Dashboard](assets/Screenshot_20260815_150042.png)
+### 5. Staff Admin Panel — Articles & User Role Management
+![Staff Admin Panel Articles and User Management](assets/Screenshot_20260815_150042.png)
+*Second section of the staff administration panel showing Markdown article CRUD management and user administration with user ID, username, assigned role, and creation date.*
 
 ---
 
