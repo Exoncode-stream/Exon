@@ -153,3 +153,6 @@ backend/composer.lock
 backend/database_old/
 .vscode/
 backend_legacy/
+
+AGENTS.md
+.agents/
