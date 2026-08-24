@@ -2,6 +2,15 @@
 
 Official web platform and community hub for Exon, designed for YouTube followers, student developers, and open-source collaborators.
 
+🌐 **Live Website:** [https://exon-ten.vercel.app/](https://exon-ten.vercel.app/)
+
+<div align="left">
+
+[![Live Demo](https://img.shields.io/badge/Live%20Website-exon--ten.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://exon-ten.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/Exoncode-stream/Exon)
+
+</div>
+
 ![Exon Community Hub Preview](./public/image.png)
 
 ---
