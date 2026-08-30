@@ -1,5 +1,7 @@
 # Exon - Student Developer & Community Hub
 
+> **Note pour les recruteurs / RH :** *Exon est une plateforme web moderne et un hub communautaire pour développeurs étudiants, conçue avec Next.js 16 (React 19), TypeScript et Tailwind CSS v4, appliquant une architecture 100 % sémantique HTML5 et accessible (WAI-ARIA).*
+
 Official web platform and community hub for Exon, designed for YouTube followers, student developers, and open-source collaborators.
 
 🌐 **Live Website:** [https://exon-ten.vercel.app/](https://exon-ten.vercel.app/)
@@ -10,6 +12,7 @@ Official web platform and community hub for Exon, designed for YouTube followers
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/Exoncode-stream/Exon)
 
 </div>
+
 
 ![Exon Community Hub Preview](./public/image.png)
 
