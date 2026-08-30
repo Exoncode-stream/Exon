@@ -36,7 +36,7 @@ This repository hosts the source code for the Exon Community Hub. It serves as a
 1. **Global Header & Navigation:** Custom SVG branding, version indicator, and section quick-links.
 2. **Hero & Positioning:** Mission statement, core philosophy, and high-level role metrics description list.
 3. **Core Philosophy:** Three engineering tenets (*Semantic & Accessible*, *Fundamentals First*, *Open & Collaborative*).
-4. **Tech Stack Matrix:** Categorized overview of frontend, backend, and DevOps tooling.
+4. **Tech Stack Matrix:** Categorized overview of frontend, backend, and developer tooling.
 5. **Active Project Card:** Status and repository link for the core Exon Community Hub (Base MVC phase).
 6. **Deep-Dive Technical Article:** Detailed breakdown titled *"Why Semantic HTML5 Outperforms Traditional Generic Markup"* (Published on August 21, 2026).
 7. **Semantic Contact Channels:** Structured direct links to Discord (`guiireg`), GitHub (`@guiiireg`), and Email (`exon.code@proton.me`).

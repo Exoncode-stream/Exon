@@ -375,16 +375,16 @@ export default function Home() {
           <article className="flex flex-col gap-4 rounded-2xl border border-zinc-100 bg-zinc-50/80 p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-800/30 dark:hover:border-zinc-700">
             <header className="flex flex-col gap-1">
               <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
-                DevOps, Testing &amp; Environment
+                Tooling, Testing &amp; Environment
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Developer productivity, version control, and delivery pipelines.
+                Developer productivity, version control, and code quality.
               </p>
             </header>
             <menu className="flex flex-wrap gap-2">
               <li>
                 <kbd className="rounded-md border border-zinc-200 bg-white px-2 py-1 font-mono text-xs font-medium text-zinc-800 shadow-xs transition-all duration-200 hover:border-blue-400 hover:bg-blue-50/40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-blue-500/50 dark:hover:bg-zinc-700">
-                  Git &amp; GitHub Actions
+                  Git &amp; GitHub
                 </kbd>
               </li>
               <li>
