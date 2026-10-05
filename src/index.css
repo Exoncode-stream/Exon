@@ -257,6 +257,7 @@ h1 span {
 }
 
 .statement-center {
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -459,7 +460,7 @@ footer {
 }
 
 footer p,
-footer a {
+footer a:not(.footer-wordmark) {
   margin-bottom: 9px;
   color: #888b84;
   font-family: "DM Mono", monospace;
@@ -472,7 +473,7 @@ footer p {
   justify-self: center;
 }
 
-footer a {
+footer a:not(.footer-wordmark) {
   justify-self: end;
 }
 
@@ -609,7 +610,7 @@ footer a {
   }
 
   footer p,
-  footer a {
+  footer a:not(.footer-wordmark) {
     justify-self: start;
     grid-column: auto;
   }

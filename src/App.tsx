@@ -38,11 +38,11 @@ export default function App() {
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <div className="eyebrow">
-              <span className="status-dot" />
+          <header className="hero-copy">
+            <p className="eyebrow">
+              <span className="status-dot" aria-hidden="true" />
               Computer science student
-            </div>
+            </p>
             <h1 id="hero-title">
               Learning,
               <br />
@@ -54,7 +54,7 @@ export default function App() {
               I’m Exon, a computer science student learning to trust my own
               logic again by coding without AI.
             </p>
-            <div className="hero-actions">
+            <nav className="hero-actions" aria-label="Hero actions">
               <a
                 className="primary-action"
                 href={channelUrl}
@@ -70,41 +70,41 @@ export default function App() {
                 Why I stream
                 <ArrowIcon />
               </a>
-            </div>
-          </div>
+            </nav>
+          </header>
 
-          <div className="hero-statement" aria-label="Exon, computer science student">
-            <div className="statement-topline">
+          <aside className="hero-statement" aria-label="Exon, computer science student">
+            <header className="statement-topline">
               <span>Student notes</span>
               <span>CS / 01</span>
-            </div>
-            <div className="statement-center">
-              <span className="brace">{"{"}</span>
+            </header>
+            <figure className="statement-center">
+              <span className="brace" aria-hidden="true">{"{"}</span>
               <div>
                 <p>curiosity</p>
                 <p>logic</p>
                 <p>progress</p>
               </div>
-              <span className="brace">{"}"}</span>
-            </div>
-            <div className="statement-footer">
+              <span className="brace" aria-hidden="true">{"}"}</span>
+            </figure>
+            <footer className="statement-footer">
               <span>Still learning</span>
               <strong>EXON</strong>
-            </div>
-          </div>
+            </footer>
+          </aside>
         </section>
 
         <section className="about-section" id="about" aria-labelledby="about-title">
-          <div className="section-number">01</div>
-          <div className="about-heading">
+          <p className="section-number" aria-hidden="true">01</p>
+          <header className="about-heading">
             <p className="section-kicker">About me</p>
             <h2 id="about-title">
               A student with
               <br />
               <span>a curious mind.</span>
             </h2>
-          </div>
-          <div className="about-copy">
+          </header>
+          <article className="about-copy">
             <p>
               Computer science gives me a new way to understand how things
               work. There is always another idea to explore, another problem
@@ -115,18 +115,18 @@ export default function App() {
               of an expert, but from a student rebuilding confidence in his
               own thinking.
             </p>
-          </div>
+          </article>
         </section>
 
         <section className="why-section" id="why" aria-labelledby="why-title">
-          <div className="why-intro">
+          <header className="why-intro">
             <p className="section-kicker section-kicker--dark">
               Why I started streaming
             </p>
             <h2 id="why-title">
               I want to learn how to think for myself again.
             </h2>
-          </div>
+          </header>
           <div className="why-grid">
             <article>
               <span>01</span>
@@ -167,10 +167,10 @@ export default function App() {
         </section>
 
         <section className="channel-section" id="channel" aria-labelledby="channel-title">
-          <div>
+          <header>
             <p className="section-kicker">Follow along</p>
             <h2 id="channel-title">This is only the beginning.</h2>
-          </div>
+          </header>
           <a
             className="channel-action"
             href={channelUrl}
@@ -189,9 +189,9 @@ export default function App() {
       </main>
 
       <footer>
-        <div className="footer-wordmark">
+        <a className="footer-wordmark" href="#top" aria-label="Exon home">
           EXON<span>.</span>
-        </div>
+        </a>
         <p>Computer science student</p>
         <a href={channelUrl} target="_blank" rel="noreferrer">
           youtube.com/@exon9858
